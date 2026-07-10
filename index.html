@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRADEINSIGHT - DESIGN SYSTEM EDITION</title>
+    <title>GRADEINSIGHT - INDUSTRIAL AUDIT EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
@@ -17,34 +17,46 @@
             --color-brown: #6A4B43;
             --color-black: #2B2B2B;
             --color-purple: #5B49D6;
-            --color-bg: #D9D9D9;
+            --color-bg: #E5E5E5;
         }
 
         body {
             background-color: var(--color-bg);
             color: var(--color-black);
             font-family: 'Inter', 'Sarabun', sans-serif;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
         }
 
         .border-bold { border: 3px solid var(--color-black); }
         .border-bottom-bold { border-bottom: 5px solid var(--color-black); }
         
-        .btn-primary {
-            background-color: var(--color-purple);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: transform 0.1s;
-        }
-        .btn-primary:active { transform: scale(0.95); }
-
         .card {
             background-color: var(--color-offwhite);
             border: 3px solid var(--color-black);
-            box-shadow: 6px 6px 0px var(--color-black);
+            box-shadow: 5px 5px 0px var(--color-black);
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-purple);
+            color: white;
+            padding: 10px 20px;
+            border: 3px solid var(--color-black);
+            box-shadow: 4px 4px 0px var(--color-black);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--color-black);
+        }
+
+        .btn-action {
+            padding: 4px 8px;
+            border: 2px solid var(--color-black);
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
         .tab-active {
@@ -55,262 +67,233 @@
         .chart-container {
             position: relative;
             width: 100%;
-            height: 250px;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 300px;
         }
 
         input, select {
-            background: white;
             border: 2px solid var(--color-black);
-            padding: 4px 8px;
+            padding: 2px 6px;
             font-weight: 700;
+            background: white;
+            outline: none;
         }
 
-        .hide-scroll::-webkit-scrollbar { display: none; }
+        .editing-row {
+            background-color: var(--color-yellow) !important;
+        }
+
+        .log-item {
+            border-left: 8px solid var(--color-black);
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: white;
+        }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-10">
 
-<!-- Chosen Palette: Ophtus Industrial Modern (Beige, Pink, Yellow, Black, Purple) -->
-<!-- Application Structure Plan: 
-    เน้นโครงสร้างแบบ Layout Grid ที่ชัดเจนตาม Design System:
-    1. Navigation: ใช้ Tab สไตล์ Bold และเส้นคั่นที่หนา
-    2. Header: แสดงชื่อแอปและ GPAX ในกล่องที่มีเส้นขอบชัดเจน
-    3. Dashboard: รวมสถิติและกราฟเส้น (Chart.js) ที่ใช้ Palette สีตามกำหนด
-    4. Curriculum Tracker: แยกกลุ่มวิชาเป็น Card ขนาดใหญ่ แสดงรหัสและรายวิชาที่แก้ไขภาษาไทยแล้ว
-    *จุดเด่น: ใช้ปุ่มสีม่วง #5B49D6 สำหรับการคำนวณหรือยืนยันข้อมูลสำคัญ
--->
-<!-- Visualization & Content Choices: 
-    - Line Chart (Chart.js): แสดงแนวโน้ม GPA โดยใช้เส้นหนาและจุดสีม่วง
-    - Progress Bar: ใช้สีเหลือง #FFD34D บนพื้นดำเพื่อความชัดเจนสูงสุด
-    - Course Entries: แสดงรหัสวิชาในรูปแบบตัวหนาขนาด 16pt ตาม Typography ในภาพ
-    - ภาษาไทย: แก้ไขสระ/วรรณยุกต์ที่ผิดพลาดจากการ OCR ให้ถูกต้อง 100%
--->
-<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
-<div class="max-w-5xl mx-auto">
-    <!-- Top Header -->
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6 border-bottom-bold pb-6">
-        <div>
-            <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none mb-2">GRADE<br>INSIGHT</h1>
-            <p class="text-lg font-bold text-[var(--color-brown)] uppercase">Curriculum Analysis & Tracking</p>
+<div class="max-w-6xl mx-auto">
+    <!-- Branding & Quick Stats -->
+    <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+        <div class="text-center md:text-left">
+            <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic">GRADE<br>INSIGHT</h1>
+            <div class="mt-2 h-2 bg-[var(--color-black)] w-full"></div>
+            <p class="text-sm font-bold uppercase mt-2">Design System • Audit Management</p>
         </div>
-        <div class="flex gap-4 w-full md:w-auto">
-            <div class="card p-4 flex-1 md:w-32 text-center">
-                <p class="text-[10px] font-black uppercase mb-1">Total GPAX</p>
-                <p id="gpax-val" class="text-4xl font-black">0.00</p>
+        
+        <div class="flex gap-4">
+            <div class="card p-4 w-32 text-center bg-white">
+                <p class="text-[10px] font-black uppercase">Current GPAX</p>
+                <p id="stat-gpax" class="text-4xl font-black">0.00</p>
             </div>
-            <div class="card p-4 flex-1 md:w-32 text-center bg-[var(--color-yellow)]">
-                <p class="text-[10px] font-black uppercase mb-1">Credits</p>
-                <p id="credit-val" class="text-4xl font-black">0</p>
+            <div class="card p-4 w-32 text-center bg-[var(--color-yellow)]">
+                <p class="text-[10px] font-black uppercase">Earned Credits</p>
+                <p id="stat-credits" class="text-4xl font-black">0</p>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <div class="flex gap-2 mb-10 overflow-x-auto hide-scroll">
-        <button onclick="switchTab('overview')" class="tab-btn card px-8 py-3 font-black uppercase text-sm tab-active" data-target="overview">Overview</button>
-        <button onclick="switchTab('curriculum')" class="tab-btn card px-8 py-3 font-black uppercase text-sm" data-target="curriculum">Curriculum</button>
-    </div>
+    <!-- Navigation -->
+    <nav class="flex gap-3 mb-8 overflow-x-auto pb-2">
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn card px-6 py-2 font-black uppercase text-xs tab-active">Overview</button>
+        <button onclick="switchTab('curriculum')" id="tab-curriculum" class="tab-btn card px-6 py-2 font-black uppercase text-xs">Curriculum</button>
+        <button onclick="switchTab('audit')" id="tab-audit" class="tab-btn card px-6 py-2 font-black uppercase text-xs">Audit Log</button>
+    </nav>
 
-    <!-- Main Content: Overview -->
-    <main id="overview" class="tab-content block animate-in fade-in duration-300">
+    <!-- Section 1: Dashboard -->
+    <section id="dashboard-sec" class="tab-content block">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- GPA Trend Card -->
-            <div class="lg:col-span-2 card p-6">
-                <h2 class="text-2xl font-black uppercase mb-6 flex items-center gap-2">
-                    <span class="w-4 h-4 bg-[var(--color-purple)] inline-block"></span>
-                    Performance Trend
+            <div class="lg:col-span-2 card p-6 bg-white">
+                <h2 class="text-xl font-black uppercase mb-6 flex items-center gap-2">
+                    <span class="w-3 h-3 bg-[var(--color-purple)]"></span> Performance Analysis
                 </h2>
+                <p class="text-xs font-bold mb-4 opacity-70">วิเคราะห์ผลการเรียนจากวิชาที่ลงทะเบียนไว้ทั้งหมด</p>
                 <div class="chart-container">
-                    <canvas id="gpaTrendChart"></canvas>
+                    <canvas id="gpaChart"></canvas>
                 </div>
             </div>
 
-            <!-- Honors Prediction -->
-            <div class="card p-6 bg-[var(--color-beige)]">
-                <h2 class="text-xl font-black uppercase mb-4">Honor Prediction</h2>
-                <div class="border-bold p-4 bg-white mb-4">
-                    <p id="honor-status" class="text-2xl font-black text-center">WAITING...</p>
+            <div class="flex flex-col gap-6">
+                <div class="card p-6 bg-[var(--color-beige)]">
+                    <h3 class="font-black uppercase text-sm mb-4 italic underline">Honor Prediction</h3>
+                    <div id="honor-box" class="border-bold bg-white p-4 text-center">
+                        <p id="honor-label" class="text-xl font-black uppercase">Waiting Data</p>
+                    </div>
                 </div>
-                <ul class="text-[11px] font-bold space-y-2 uppercase">
-                    <li class="flex justify-between"><span>No F Grade</span> <span id="chk-f" class="text-red-600">●</span></li>
-                    <li class="flex justify-between"><span>No Retake</span> <span id="chk-re" class="text-red-600">●</span></li>
-                    <li class="flex justify-between"><span>4-Year Period</span> <span id="chk-time" class="text-green-600">●</span></li>
-                </ul>
-            </div>
-
-            <!-- Progress Categories -->
-            <div class="lg:col-span-3 card p-8">
-                <h2 class="text-2xl font-black uppercase mb-8">Degree Progress</h2>
-                <div id="category-progress-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Progress items injected here -->
+                
+                <div class="card p-6 bg-[var(--color-pink-light)] flex-1">
+                    <h3 class="font-black uppercase text-sm mb-4 italic underline">Category Progress</h3>
+                    <div id="progress-list" class="space-y-4">
+                        <!-- Progress bars -->
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Main Content: Curriculum -->
-    <main id="curriculum" class="tab-content hidden">
-        <div class="card p-6 bg-[var(--color-pink-light)] mb-8">
-            <h2 class="text-2xl font-black uppercase">Subject Tracker</h2>
-            <p class="text-sm font-bold uppercase mt-1 opacity-70">แก้ไขข้อมูลเกรดเพื่อคำนวณ GPAX ตามรายวิชาในหลักสูตร</p>
+    <!-- Section 2: Curriculum Management -->
+    <section id="curriculum-sec" class="tab-content hidden">
+        <div class="card p-6 bg-white mb-8 border-bold">
+            <h2 class="text-2xl font-black uppercase italic mb-2">Academic Record Management</h2>
+            <p class="text-xs font-bold uppercase opacity-60">คลิกที่ Edit เพื่อแก้ไขข้อมูลวิชา หรือเปลี่ยนเกรดเพื่อคำนวณผลการเรียนใหม่</p>
         </div>
-        
-        <div id="course-lists" class="space-y-12">
-            <!-- Course groups injected here -->
-        </div>
-    </main>
 
-    <!-- Global CTA -->
-    <footer class="mt-16 flex justify-center pb-10">
-        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="btn-primary flex items-center gap-4">
-            Back to Top
-            <span class="text-xl">↑</span>
-        </button>
-    </footer>
+        <div id="category-container" class="space-y-12 pb-20">
+            <!-- Curriculum rendered here -->
+        </div>
+    </section>
+
+    <!-- Section 3: Audit Log -->
+    <section id="audit-sec" class="tab-content hidden">
+        <div class="card p-6 bg-white border-bold">
+            <h2 class="text-2xl font-black uppercase italic mb-6 flex justify-between items-center">
+                System Audit History
+                <span class="text-xs font-normal bg-black text-white px-2 py-1">Newest First</span>
+            </h2>
+            <div id="audit-log-container" class="space-y-2">
+                <!-- Log entries -->
+            </div>
+        </div>
+    </section>
 </div>
 
 <script>
-    // --- Data with Corrected Thai Language ---
-    const DATA = {
-        groups: [
-            { id: 'core', name: 'กลุ่มวิชาแกน (Core)', req: 27, items: [
-                { code: '321-1101', name: 'สุนทรียศาสตร์ ศิลปะและการออกแบบ', credit: 3 },
-                { code: '321-1102', name: 'องค์ประกอบศิลป์และทฤษฎีสีเพื่อการออกแบบ', credit: 3 },
-                { code: '321-1103', name: 'การวาดภาพเพื่อการออกแบบ', credit: 3 },
-                { code: '321-1104', name: 'คอมพิวเตอร์เพื่อการออกแบบและตกแต่งภาพ', credit: 3 },
-                { code: '321-1105', name: 'คอมพิวเตอร์เพื่อการออกแบบมัลติมีเดีย', credit: 3 },
-                { code: '321-1206', name: 'คอมพิวเตอร์เพื่อการออกแบบ 3 มิติ', credit: 3 },
-                { code: '321-1207', name: 'การสร้างแบบร่างและการสร้างแบบจำลอง', credit: 3 },
-                { code: '321-1208', name: 'การออกแบบกราฟิก', credit: 3 },
-                { code: '321-1209', name: 'ระบบคอมพิวเตอร์พื้นฐาน', credit: 3 }
-            ]},
-            { id: 'compulsory', name: 'กลุ่มวิชาชีพบังคับ (Major Compulsory)', req: 52, items: [
-                { code: '321-2101', name: 'การเขียนโปรแกรมเบื้องต้นเพื่อการออกแบบและเทคโนโลยี', credit: 3 },
-                { code: '321-2102', name: 'แนวคิดและการคิดวิเคราะห์เชิงออกแบบ', credit: 3 },
-                { code: '321-2103', name: 'การออกแบบปฏิสัมพันธ์ขั้นพื้นฐาน', credit: 3 },
-                { code: '321-2204', name: 'ปัจจัยและความสัมพันธ์ระหว่างมนุษย์กับการออกแบบ', credit: 3 },
-                { code: '321-2205', name: 'การออกแบบเว็บไซต์เพื่ออุปกรณ์เคลื่อนที่', credit: 3 },
-                { code: '321-2206', name: 'การออกแบบนวัตกรรมดิจิทัลเบื้องต้น', credit: 4 },
-                { code: '321-2207', name: 'การออกแบบนวัตกรรมดิจิทัลเพื่องาน IoT', credit: 4 },
-                { code: '321-2308', name: 'การออกแบบนวัตกรรมดิจิทัลเชิงสร้างสรรค์ 1', credit: 4 },
-                { code: '321-2309', name: 'การออกแบบนวัตกรรมดิจิทัลเชิงสร้างสรรค์ 2', credit: 4 },
-                { code: '321-2310', name: 'การออกแบบอินโฟกราฟิก', credit: 3 },
-                { code: '321-2311', name: 'สัมมนาการออกแบบและเทคโนโลยี', credit: 3 },
-                { code: '321-2312', name: 'จริยธรรมวิชาชีพและการเตรียมความพร้อมเพื่อการทำงาน', credit: 3 },
-                { code: '321-2413', name: 'การค้นคว้าเพื่อการออกแบบ', credit: 3 },
-                { code: '321-2414', name: 'เตรียมปริญญานิพนธ์การออกแบบและเทคโนโลยี', credit: 3 },
-                { code: '321-2415', name: 'ปริญญานิพนธ์การออกแบบและเทคโนโลยี', credit: 6 }
-            ]},
-            { id: 'elective', name: 'กลุ่มวิชาชีพเลือก (Major Elective)', req: 15, items: [
-                { code: '321-3301', name: 'การออกแบบเพื่อความยั่งยืน', credit: 3 },
-                { code: '321-3302', name: 'การออกแบบเพื่อภูมิปัญญาและวัฒนธรรมไทย', credit: 3 },
-                { code: '321-3303', name: 'ออกแบบบริการ', credit: 3 },
-                { code: '321-3304', name: 'กฎหมายทรัพย์สินทางปัญญาเพื่องานออกแบบ', credit: 3 },
-                { code: '321-3305', name: 'การบริหารโครงการซอฟต์แวร์', credit: 3 },
-                { code: '321-3306', name: 'การออกแบบเพื่อความเป็นอยู่ที่ดี', credit: 3 },
-                { code: '321-3307', name: 'ธุรกิจและการเป็นผู้ประกอบการงานออกแบบ', credit: 3 },
-                { code: '321-3308', name: 'การออกแบบบรรจุภัณฑ์', credit: 3 },
-                { code: '321-3310', name: 'ฝึกปฏิบัติวิชาชีพการออกแบบและเทคโนโลยี', credit: 3 }
-            ]}
-        ]
-    };
+    // --- Data Management ---
+    let DATA = [
+        { id: 'c1', group: 'core', code: '321-1101', name: 'สุนทรียศาสตร์ ศิลปะและการออกแบบ', credit: 3, grade: '' },
+        { id: 'c2', group: 'core', code: '321-1102', name: 'องค์ประกอบศิลป์และทฤษฎีสีเพื่อการออกแบบ', credit: 3, grade: '' },
+        { id: 'c3', group: 'core', code: '321-1103', name: 'การวาดภาพเพื่อการออกแบบ', credit: 3, grade: '' },
+        { id: 'c4', group: 'core', code: '321-1104', name: 'คอมพิวเตอร์เพื่อการออกแบบและตกแต่งภาพ', credit: 3, grade: '' },
+        { id: 'c5', group: 'core', code: '321-1105', name: 'คอมพิวเตอร์เพื่อการออกแบบมัลติมีเดีย', credit: 3, grade: '' },
+        { id: 'c6', group: 'core', code: '321-1206', name: 'คอมพิวเตอร์เพื่อการออกแบบ 3 มิติ', credit: 3, grade: '' },
+        { id: 'c7', group: 'core', code: '321-1207', name: 'การสร้างแบบร่างและการสร้างแบบจำลอง', credit: 3, grade: '' },
+        { id: 'c8', group: 'compulsory', code: '321-2101', name: 'การเขียนโปรแกรมเบื้องต้นเพื่อการออกแบบ', credit: 3, grade: '' },
+        { id: 'c9', group: 'compulsory', code: '321-2102', name: 'แนวคิดและการคิดวิเคราะห์เชิงออกแบบ', credit: 3, grade: '' },
+        { id: 'c10', group: 'elective', code: '321-3301', name: 'การออกแบบเพื่อความยั่งยืน', credit: 3, grade: '' }
+    ];
 
-    const GRADES = { 'A': 4, 'B+': 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0, '': null };
-    let userGrades = {};
-    let chartInstance = null;
+    let auditLogs = [];
 
+    const GROUPS = [
+        { id: 'core', name: 'กลุ่มวิชาแกน (Core)', req: 27 },
+        { id: 'compulsory', name: 'กลุ่มวิชาชีพบังคับ (Major Compulsory)', req: 52 },
+        { id: 'elective', name: 'กลุ่มวิชาชีพเลือก (Major Elective)', req: 15 }
+    ];
+
+    const GRADE_MAP = { 'A': 4, 'B+': 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0, '': null };
+    let editingId = null;
+    let myChart = null;
+
+    // --- Core Functions ---
     function init() {
+        addAuditLog('System', 'แอปพลิเคชันเริ่มต้นการทำงาน');
         renderCurriculum();
-        updateCalculations();
-        renderProgressCards();
+        updateStats();
         initChart();
     }
 
-    function renderCurriculum() {
-        const container = document.getElementById('course-lists');
-        container.innerHTML = DATA.groups.map(group => `
-            <div>
-                <h3 class="text-2xl font-black uppercase mb-4 flex items-center gap-3">
-                    <span class="w-8 h-8 bg-[var(--color-black)] text-white flex items-center justify-center text-xs">GO</span>
-                    ${group.name}
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    ${group.items.map(course => `
-                        <div class="card p-4 flex justify-between items-center bg-white border-bold">
-                            <div class="max-w-[70%]">
-                                <p class="text-[12px] font-black text-[var(--color-purple)] uppercase">${course.code} • ${course.credit} UNIT</p>
-                                <p class="text-[16px] font-black leading-tight">${course.name}</p>
-                            </div>
-                            <select onchange="saveGrade('${course.code}', this.value)" class="text-lg font-black">
-                                <option value="">-</option>
-                                ${Object.keys(GRADES).filter(g => g !== '').map(g => `<option value="${g}">${g}</option>`).join('')}
-                            </select>
-                        </div>
-                    `).join('')}
+    function addAuditLog(action, details) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('th-TH', { 
+            year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+        
+        auditLogs.unshift({
+            time: dateStr,
+            timestamp: now.getTime(),
+            action: action,
+            details: details
+        });
+        renderAuditLogs();
+    }
+
+    function renderAuditLogs() {
+        const container = document.getElementById('audit-log-container');
+        container.innerHTML = auditLogs.map(log => `
+            <div class="log-item border-bold">
+                <div class="flex justify-between items-start">
+                    <span class="text-[10px] font-black bg-[var(--color-black)] text-white px-2 py-0.5 uppercase tracking-tighter">${log.action}</span>
+                    <span class="text-[10px] font-bold text-gray-500 italic">${log.time}</span>
                 </div>
+                <p class="text-xs font-bold mt-1 uppercase">${log.details}</p>
             </div>
         `).join('');
     }
 
-    function saveGrade(code, grade) {
-        userGrades[code] = grade;
-        updateCalculations();
-        renderProgressCards();
-    }
-
-    function updateCalculations() {
-        let totalWeighted = 0;
+    function updateStats() {
+        let totalPoints = 0;
         let totalCreditsGraded = 0;
         let totalCreditsEarned = 0;
         let hasF = false;
 
-        DATA.groups.forEach(g => {
-            g.items.forEach(c => {
-                const grade = userGrades[c.code];
-                if (grade) {
-                    const point = GRADES[grade];
-                    totalWeighted += (point * c.credit);
-                    totalCreditsGraded += c.credit;
-                    if (point > 0) totalCreditsEarned += c.credit;
-                    if (grade === 'F') hasF = true;
-                }
-            });
+        DATA.forEach(c => {
+            const val = GRADE_MAP[c.grade];
+            if (val !== null) {
+                totalPoints += (val * c.credit);
+                totalCreditsGraded += c.credit;
+                if (val > 0) totalCreditsEarned += c.credit;
+                if (c.grade === 'F') hasF = true;
+            }
         });
 
-        const gpax = totalCreditsGraded > 0 ? (totalWeighted / totalCreditsGraded).toFixed(2) : "0.00";
-        document.getElementById('gpax-val').innerText = gpax;
-        document.getElementById('credit-val').innerText = totalCreditsEarned;
+        const gpax = totalCreditsGraded > 0 ? (totalPoints / totalCreditsGraded).toFixed(2) : "0.00";
+        document.getElementById('stat-gpax').innerText = gpax;
+        document.getElementById('stat-credits').innerText = totalCreditsEarned;
 
-        // Honors
-        const honorEl = document.getElementById('honor-status');
-        const fEl = document.getElementById('chk-f');
+        const honorLabel = document.getElementById('honor-label');
         if (hasF) {
-            honorEl.innerText = "NOT ELIGIBLE";
-            fEl.innerText = "✖"; fEl.classList.replace('text-green-600', 'text-red-600');
+            honorLabel.innerText = "NOT ELIGIBLE (F)";
+            honorLabel.className = "text-xl font-black uppercase text-red-500";
+        } else if (totalCreditsEarned === 0) {
+            honorLabel.innerText = "NO DATA";
+            honorLabel.className = "text-xl font-black uppercase opacity-30";
         } else {
-            fEl.innerText = "✔"; fEl.classList.replace('text-red-600', 'text-green-600');
-            if (parseFloat(gpax) >= 3.60) honorEl.innerText = "1ST CLASS";
-            else if (parseFloat(gpax) >= 3.25) honorEl.innerText = "2ND CLASS";
-            else honorEl.innerText = "NORMAL";
+            const g = parseFloat(gpax);
+            if (g >= 3.60) honorLabel.innerText = "1st Class Honor";
+            else if (g >= 3.25) honorLabel.innerText = "2nd Class Honor";
+            else honorLabel.innerText = "Regular Status";
+            honorLabel.className = "text-xl font-black uppercase text-[var(--color-purple)]";
         }
+
+        renderProgress();
     }
 
-    function renderProgressCards() {
-        const container = document.getElementById('category-progress-container');
-        container.innerHTML = DATA.groups.map(group => {
-            let earned = 0;
-            group.items.forEach(c => { if(userGrades[c.code] && GRADES[userGrades[c.code]] > 0) earned += c.credit; });
-            const pct = Math.min(100, (earned / group.req) * 100);
+    function renderProgress() {
+        const container = document.getElementById('progress-list');
+        container.innerHTML = GROUPS.map(g => {
+            const earned = DATA.filter(c => c.group === g.id && GRADE_MAP[c.grade] > 0)
+                               .reduce((sum, c) => sum + c.credit, 0);
+            const pct = Math.min(100, (earned / g.req) * 100);
             return `
-                <div class="border-bold p-4 bg-white">
-                    <p class="text-[10px] font-black uppercase opacity-60 mb-1">${group.id}</p>
-                    <p class="text-sm font-black uppercase mb-4 truncate">${group.name.split(' (')[0]}</p>
-                    <div class="flex justify-between font-black text-xl mb-2">
-                        <span>${Math.round(pct)}%</span>
-                        <span class="text-[var(--color-purple)]">${earned}/${group.req}</span>
+                <div>
+                    <div class="flex justify-between text-[10px] font-black uppercase mb-1">
+                        <span>${g.name}</span>
+                        <span>${earned}/${g.req}</span>
                     </div>
-                    <div class="w-full h-4 bg-[var(--color-black)] border border-[var(--color-black)]">
+                    <div class="h-4 bg-[var(--color-black)] border-2 border-black">
                         <div class="h-full bg-[var(--color-yellow)] transition-all duration-500" style="width: ${pct}%"></div>
                     </div>
                 </div>
@@ -318,20 +301,148 @@
         }).join('');
     }
 
+    // --- CRUD ---
+    function renderCurriculum() {
+        const container = document.getElementById('category-container');
+        container.innerHTML = GROUPS.map(group => `
+            <div>
+                <div class="flex justify-between items-end border-bottom-bold pb-2 mb-6">
+                    <h3 class="text-2xl font-black uppercase italic">${group.name}</h3>
+                    <button onclick="addNewRow('${group.id}')" class="btn-primary text-xs py-1 px-3">Add Course +</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${DATA.filter(c => c.group === group.id).map(c => renderCourseItem(c)).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderCourseItem(c) {
+        if (editingId === c.id) {
+            return `
+                <div class="card p-4 editing-row">
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <input id="edit-code-${c.id}" type="text" value="${c.code}" class="text-[10px] uppercase col-span-1" placeholder="Code">
+                        <input id="edit-name-${c.id}" type="text" value="${c.name}" class="text-[10px] uppercase col-span-2" placeholder="Name">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex gap-2 items-center">
+                            <span class="text-[10px] font-bold">UNITS:</span>
+                            <input id="edit-credit-${c.id}" type="number" value="${c.credit}" class="w-12 text-center">
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="saveEdit('${c.id}')" class="btn-action bg-green-400">Save</button>
+                            <button onclick="cancelEdit()" class="btn-action bg-gray-300">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="card p-4 flex justify-between items-center bg-white group">
+                <div class="flex-1">
+                    <p class="text-[10px] font-black text-[var(--color-purple)] uppercase">${c.code} • ${c.credit} UNITS</p>
+                    <p class="text-sm font-black uppercase leading-tight">${c.name}</p>
+                    <div class="mt-2 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="startEdit('${c.id}')" class="text-[10px] font-black underline uppercase hover:text-blue-600">Edit</button>
+                        <button onclick="deleteCourse('${c.id}')" class="text-[10px] font-black underline uppercase text-red-600 hover:bg-red-100 px-1">Delete</button>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <select onchange="updateGrade('${c.id}', this.value)" class="font-black text-lg border-2 border-black">
+                        <option value="">-</option>
+                        ${Object.keys(GRADE_MAP).filter(k => k !== '').map(g => 
+                            `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            </div>
+        `;
+    }
+
+    function addNewRow(groupId) {
+        const newId = 'c-' + Date.now();
+        const groupName = GROUPS.find(g => g.id === groupId).name;
+        const newCourse = { id: newId, group: groupId, code: 'NEW-000', name: 'รายวิชาใหม่', credit: 3, grade: '' };
+        DATA.push(newCourse);
+        editingId = newId;
+        addAuditLog('Add', `เพิ่มวิชาใหม่ใน ${groupName}`);
+        renderCurriculum();
+    }
+
+    function startEdit(id) {
+        editingId = id;
+        renderCurriculum();
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        renderCurriculum();
+    }
+
+    function saveEdit(id) {
+        const code = document.getElementById(`edit-code-${id}`).value;
+        const name = document.getElementById(`edit-name-${id}`).value;
+        const credit = parseInt(document.getElementById(`edit-credit-${id}`).value) || 0;
+
+        const idx = DATA.findIndex(c => c.id === id);
+        if (idx !== -1) {
+            const oldName = DATA[idx].name;
+            DATA[idx].code = code;
+            DATA[idx].name = name;
+            DATA[idx].credit = credit;
+            addAuditLog('Edit', `แก้ไขข้อมูลวิชา: ${oldName} -> ${name} (${credit} หน่วยกิต)`);
+        }
+
+        editingId = null;
+        renderCurriculum();
+        updateStats();
+    }
+
+    function deleteCourse(id) {
+        const course = DATA.find(c => c.id === id);
+        if (course && confirm(`ต้องการลบวิชา "${course.name}" หรือไม่?`)) {
+            DATA = DATA.filter(c => c.id !== id);
+            addAuditLog('Delete', `ลบวิชา: ${course.name} [${course.code}]`);
+            renderCurriculum();
+            updateStats();
+        }
+    }
+
+    function updateGrade(id, grade) {
+        const idx = DATA.findIndex(c => c.id === id);
+        if (idx !== -1) {
+            const oldGrade = DATA[idx].grade || 'N/A';
+            DATA[idx].grade = grade;
+            addAuditLog('Update Grade', `เปลี่ยนเกรดวิชา ${DATA[idx].name}: ${oldGrade} -> ${grade || 'N/A'}`);
+            updateStats();
+        }
+    }
+
+    // --- UI Helpers ---
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+        document.getElementById(`${tab}-sec`).classList.remove('hidden');
+        document.getElementById(`tab-${tab}`).classList.add('tab-active');
+    }
+
     function initChart() {
-        const ctx = document.getElementById('gpaTrendChart').getContext('2d');
-        chartInstance = new Chart(ctx, {
+        const ctx = document.getElementById('gpaChart').getContext('2d');
+        myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Y1/T1', 'Y1/T2', 'Y2/T1', 'Y2/T2', 'Y3/T1'],
+                labels: ['Start', 'Term 1', 'Term 2', 'Term 3', 'Current'],
                 datasets: [{
-                    label: 'Term GPA',
-                    data: [3.2, 3.5, 3.1, 3.8, 3.4],
+                    label: 'GPA',
+                    data: [0, 0, 0, 0, 0],
                     borderColor: '#2B2B2B',
-                    backgroundColor: '#5B49D6',
-                    borderWidth: 4,
+                    backgroundColor: 'rgba(91, 73, 214, 0.1)',
+                    borderWidth: 6,
                     pointRadius: 6,
-                    pointBackgroundColor: '#5B49D6',
+                    pointBackgroundColor: '#FFD34D',
+                    fill: true,
                     tension: 0
                 }]
             },
@@ -344,16 +455,6 @@
                     x: { ticks: { font: { weight: 'bold' } } }
                 }
             }
-        });
-    }
-
-    function switchTab(targetId) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.getElementById(targetId).classList.remove('hidden');
-
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            if (btn.dataset.target === targetId) btn.classList.add('tab-active');
-            else btn.classList.remove('tab-active');
         });
     }
 
