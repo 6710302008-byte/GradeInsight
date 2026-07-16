@@ -2,13 +2,20 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRADEINSIGHT - INDUSTRIAL AUDIT EDITION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2B2B2B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>GradeInsight - CDTI Edition</title>
+    
+    <!-- External Resources: Tailwind CSS & Chart.js -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
+            /* Design System Colors - Light Mode */
             --color-beige: #F7DCAD;
             --color-offwhite: #F9F7F5;
             --color-pink-light: #F6B8B6;
@@ -18,448 +25,2694 @@
             --color-black: #2B2B2B;
             --color-purple: #5B49D6;
             --color-bg: #E5E5E5;
+            
+            --color-header-bg: #2B2B2B;
+            --color-header-text: #FFFFFF;
+            --color-focus-bg: #F0EDFF;
+            --color-mute-text: #6B7280;
+        }
+
+        body.dark-mode {
+            /* Design System Colors - Dark Mode */
+            --color-bg: #121214;
+            --color-offwhite: #1C1C1E;
+            --color-black: #F4F4F5;
+            --color-beige: #4A3E25;
+            --color-pink-light: #4E2E2D;
+            --color-pink-dark: #EF4444;
+            --color-yellow: #FACC15;
+            --color-purple: #818CF8;
+            
+            --color-header-bg: #1C1C1E;
+            --color-header-text: #F4F4F5;
+            --color-focus-bg: #2A215C;
+            --color-mute-text: #A1A1AA;
         }
 
         body {
             background-color: var(--color-bg);
             color: var(--color-black);
             font-family: 'Inter', 'Sarabun', sans-serif;
-            letter-spacing: -0.01em;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
 
-        .border-bold { border: 3px solid var(--color-black); }
-        .border-bottom-bold { border-bottom: 5px solid var(--color-black); }
+        /* Brutalist Heavy Border & Shadows from Design System */
+        .border-heavy {
+            border: 3px solid var(--color-black);
+        }
+        
+        .shadow-heavy {
+            box-shadow: 4px 4px 0px var(--color-black);
+        }
         
         .card {
             background-color: var(--color-offwhite);
             border: 3px solid var(--color-black);
-            box-shadow: 5px 5px 0px var(--color-black);
-            transition: all 0.2s;
+            box-shadow: 4px 4px 0px var(--color-black);
+            border-radius: 0px;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
-        .btn-primary {
+        .btn {
+            font-weight: 900;
+            border: 3px solid var(--color-black);
+            box-shadow: 3px 3px 0px var(--color-black);
+            transition: all 0.1s;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--color-black);
+        }
+        
+        .btn-purple {
             background-color: var(--color-purple);
             color: white;
-            padding: 10px 20px;
+        }
+
+        .btn-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 9999px;
             border: 3px solid var(--color-black);
-            box-shadow: 4px 4px 0px var(--color-black);
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        .btn-primary:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--color-black);
-        }
-
-        .btn-action {
-            padding: 4px 8px;
-            border: 2px solid var(--color-black);
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
+            box-shadow: 3px 3px 0px var(--color-black);
+            transition: all 0.1s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .tab-active {
-            background-color: var(--color-black);
-            color: white;
+        .btn-circle:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--color-black);
         }
 
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            height: 300px;
+        .btn-yellow {
+            background-color: var(--color-yellow);
+            color: #2B2B2B;
+        }
+
+        .btn-danger {
+            background-color: var(--color-pink-dark);
+            color: #2B2B2B;
         }
 
         input, select {
             border: 2px solid var(--color-black);
-            padding: 2px 6px;
+            padding: 4px 8px;
             font-weight: 700;
-            background: white;
             outline: none;
+            background: var(--color-offwhite);
+            color: var(--color-black);
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
 
-        .editing-row {
+        input:focus, select:focus {
+            border-color: var(--color-purple);
+            background-color: var(--color-focus-bg);
+        }
+
+        /* Dynamic active states for Navigation Tabs */
+        .tab-btn.active-tab {
             background-color: var(--color-yellow) !important;
+            color: #2B2B2B !important;
+            transform: translateY(2px);
+            box-shadow: 1px 1px 0px var(--color-black);
         }
 
-        .log-item {
-            border-left: 8px solid var(--color-black);
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            background: white;
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        .term-accordion[open] summary .icon-toggle {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="pb-24">
 
-<div class="max-w-6xl mx-auto">
-    <!-- Branding & Quick Stats -->
-    <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-        <div class="text-center md:text-left">
-            <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic">GRADE<br>INSIGHT</h1>
-            <div class="mt-2 h-2 bg-[var(--color-black)] w-full"></div>
-            <p class="text-sm font-bold uppercase mt-2">Design System • Audit Management</p>
-        </div>
-        
-        <div class="flex gap-4">
-            <div class="card p-4 w-32 text-center bg-white">
-                <p class="text-[10px] font-black uppercase">Current GPAX</p>
-                <p id="stat-gpax" class="text-4xl font-black">0.00</p>
+    <!-- STICKY HEADER -->
+    <header class="bg-[var(--color-header-bg)] text-[var(--color-header-text)] p-4 sticky top-0 z-50 border-b-[6px] border-[var(--color-yellow)] transition-colors">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <div>
+                    <h1 class="text-3xl font-black italic tracking-tighter uppercase font-['Inter']">GradeInsight</h1>
+                    <p class="text-xs font-bold text-[var(--color-yellow)] tracking-wider font-['Sarabun']">CDTI Digital Design & Technology (133 Cr.)</p>
+                </div>
+                
+                <!-- Theme Switcher for Mobile Devices (Updated to Neobrutalist Circle) -->
+                <button onclick="toggleTheme()" class="md:hidden btn-circle btn-yellow" id="theme-toggle-mobile" title="สลับโหมด">
+                </button>
             </div>
-            <div class="card p-4 w-32 text-center bg-[var(--color-yellow)]">
-                <p class="text-[10px] font-black uppercase">Earned Credits</p>
-                <p id="stat-credits" class="text-4xl font-black">0</p>
+            
+            <!-- User Profile & Theme Toggle Container -->
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <!-- Theme Switcher for Desktop Devices (Updated to Neobrutalist Circle) -->
+                <button onclick="toggleTheme()" class="hidden md:flex btn-circle btn-yellow" id="theme-toggle-desktop" title="สลับโหมด">
+                </button>
+
+                <!-- User Profile (Editable without Login) -->
+                <div class="card bg-[var(--color-offwhite)] text-[var(--color-black)] p-2 px-4 flex items-center gap-3 w-full md:w-auto cursor-pointer shadow-none border-2 flex-1 md:flex-initial" onclick="startEditProfile()">
+                    <div id="profile-display" class="text-right flex-1">
+                        <p id="display-name" class="font-black text-sm">ชื่อ-นามสกุล</p>
+                        <p id="display-id" class="text-xs font-bold text-[var(--color-purple)]">รหัสนักศึกษา: 00000000</p>
+                    </div>
+                    <div id="profile-edit" class="hidden flex-col gap-1 w-full">
+                        <input type="text" id="input-name" placeholder="ชื่อ-นามสกุล" class="w-full text-xs" onfocus="this.select()" onclick="event.stopPropagation()">
+                        <input type="text" id="input-id" placeholder="รหัสนักศึกษา" class="w-full text-xs mt-1" onfocus="this.select()" onclick="event.stopPropagation()">
+                        <button class="btn btn-purple text-[10px] py-1 mt-1" onclick="saveProfile(event)">บันทึกค่ะ</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="flex gap-3 mb-8 overflow-x-auto pb-2">
-        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn card px-6 py-2 font-black uppercase text-xs tab-active">Overview</button>
-        <button onclick="switchTab('curriculum')" id="tab-curriculum" class="tab-btn card px-6 py-2 font-black uppercase text-xs">Curriculum</button>
-        <button onclick="switchTab('audit')" id="tab-audit" class="tab-btn card px-6 py-2 font-black uppercase text-xs">Audit Log</button>
-    </nav>
-
-    <!-- Section 1: Dashboard -->
-    <section id="dashboard-sec" class="tab-content block">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 card p-6 bg-white">
-                <h2 class="text-xl font-black uppercase mb-6 flex items-center gap-2">
-                    <span class="w-3 h-3 bg-[var(--color-purple)]"></span> Performance Analysis
-                </h2>
-                <p class="text-xs font-bold mb-4 opacity-70">วิเคราะห์ผลการเรียนจากวิชาที่ลงทะเบียนไว้ทั้งหมด</p>
-                <div class="chart-container">
-                    <canvas id="gpaChart"></canvas>
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto p-4 space-y-6 mt-4">
+        
+        <!-- DASHBOARD STATS OVERVIEW & TREND -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Cumulated GPAX Card -->
+            <div class="card p-6 flex flex-col justify-center items-center text-center">
+                <h2 class="text-xs font-black uppercase text-[var(--color-mute-text)] mb-2">หน่วยกิตสะสม (GPAX)</h2>
+                <div id="stat-gpax" class="text-7xl font-black text-[var(--color-purple)] leading-none mb-2">0.00</div>
+                <div class="w-full mt-4 space-y-2">
+                    <div id="stat-status" class="border-heavy p-2 text-xs font-black uppercase">สถานภาพ: -</div>
+                    <div id="stat-honors" class="border-heavy p-2 text-xs font-black bg-[var(--color-beige)]">เกียรตินิยม: -</div>
                 </div>
             </div>
 
-            <div class="flex flex-col gap-6">
-                <div class="card p-6 bg-[var(--color-beige)]">
-                    <h3 class="font-black uppercase text-sm mb-4 italic underline">Honor Prediction</h3>
-                    <div id="honor-box" class="border-bold bg-white p-4 text-center">
-                        <p id="honor-label" class="text-xl font-black uppercase">Waiting Data</p>
+            <!-- Enhanced Trend Chart Card with Subtabs -->
+            <div class="card p-4 md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-sm font-black mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b-2 border-[var(--color-black)] pb-2">
+                        <span class="flex items-center gap-1.5 text-[var(--color-black)]">
+                            แนวโน้มการศึกษา 
+                            <span id="danger-trend-alert" class="hidden text-xs bg-red-100 text-red-600 border border-red-500 px-2 py-0.5 rounded font-bold animate-pulse">พบเกรด F/U ⚠️</span>
+                        </span>
+                        <div class="flex flex-wrap gap-1">
+                            <button onclick="setTrendSubtab('overview')" id="btn-trend-overview" class="btn text-[10px] py-1 px-2.5 bg-[var(--color-purple)] text-white">ภาพรวม</button>
+                            <button onclick="setTrendSubtab('yearly')" id="btn-trend-yearly" class="btn text-[10px] py-1 px-2.5 bg-[var(--color-offwhite)] text-[var(--color-black)]">รายปี</button>
+                            <button onclick="setTrendSubtab('termly')" id="btn-trend-termly" class="btn text-[10px] py-1 px-2.5 bg-[var(--color-offwhite)] text-[var(--color-black)]">รายเทอม</button>
+                        </div>
+                    </h2>
+                </div>
+                
+                <!-- Subtab display panels -->
+                <div id="trend-content-overview" class="w-full h-[200px] relative">
+                    <canvas id="trendChartOverview"></canvas>
+                </div>
+                
+                <div id="trend-content-yearly" class="hidden w-full h-[200px] overflow-y-auto space-y-2 p-1">
+                    <div id="yearly-trend-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <!-- Dynamic Yearly Cards injected via JS -->
                     </div>
                 </div>
                 
-                <div class="card p-6 bg-[var(--color-pink-light)] flex-1">
-                    <h3 class="font-black uppercase text-sm mb-4 italic underline">Category Progress</h3>
-                    <div id="progress-list" class="space-y-4">
-                        <!-- Progress bars -->
-                    </div>
+                <div id="trend-content-termly" class="hidden w-full h-[200px] relative">
+                    <canvas id="trendChartTermly"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVIGATION TABS -->
+        <section class="flex flex-wrap gap-2 border-b-[3px] border-[var(--color-black)] pb-1">
+            <button class="tab-btn btn active-tab flex-1 md:flex-initial text-xs md:text-sm" data-tab="curriculum" onclick="switchTab('curriculum')">วิชาทั้งหมด</button>
+            <button class="tab-btn btn flex-1 md:flex-initial text-xs md:text-sm" data-tab="electives" onclick="switchTab('electives')">วิชาเลือก</button>
+            <button class="tab-btn btn flex-1 md:flex-initial text-xs md:text-sm" data-tab="checklist" onclick="switchTab('checklist')">หน่วยกิตทั้งหมด</button>
+            <button class="tab-btn btn flex-1 md:flex-initial text-xs md:text-sm" data-tab="audit-log" onclick="switchTab('audit-log')">ประวัติการแก้ไข</button>
+        </section>
+
+        <!-- TAB CONTENT: ACADEMIC RECORDS -->
+        <div id="tab-curriculum" class="tab-content space-y-6">
+            <!-- SUB-TABS: ภาพรวม -> ปี 1 -> ปี 2 -> ปี 3 -> ปี 4 -->
+            <div class="flex flex-wrap gap-1 border-b-[2px] border-[var(--color-black)] pb-2 items-center">
+                <span class="text-xs font-black mr-2 text-[var(--color-mute-text)]">เลือกชั้นปี:</span>
+                <button onclick="setCurriculumSubtab('all')" id="subtab-cur-all" class="subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-yellow)] text-black active-tab">ภาพรวม</button>
+                <button onclick="setCurriculumSubtab('Y1')" id="subtab-cur-Y1" class="subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 1</button>
+                <button onclick="setCurriculumSubtab('Y2')" id="subtab-cur-Y2" class="subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 2</button>
+                <button onclick="setCurriculumSubtab('Y3')" id="subtab-cur-Y3" class="subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 3</button>
+                <button onclick="setCurriculumSubtab('Y4')" id="subtab-cur-Y4" class="subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 4</button>
+            </div>
+            
+            <div id="semesters-container" class="space-y-4">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: ELECTIVES -->
+        <div id="tab-electives" class="tab-content hidden space-y-6">
+            <!-- SUB-TABS: ภาพรวม -> ปี 1 -> ปี 2 -> ปี 3 -> ปี 4 -->
+            <div class="flex flex-wrap gap-1 border-b-[2px] border-[var(--color-black)] pb-2 items-center">
+                <span class="text-xs font-black mr-2 text-[var(--color-mute-text)]">เลือกชั้นปี:</span>
+                <button onclick="setElectiveSubtab('all')" id="subtab-elec-all" class="subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-yellow)] text-black active-tab">ภาพรวม</button>
+                <button onclick="setElectiveSubtab('Y1')" id="subtab-elec-Y1" class="subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 1</button>
+                <button onclick="setElectiveSubtab('Y2')" id="subtab-elec-Y2" class="subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 2</button>
+                <button onclick="setElectiveSubtab('Y3')" id="subtab-elec-Y3" class="subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 3</button>
+                <button onclick="setElectiveSubtab('Y4')" id="subtab-elec-Y4" class="subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]">ปี 4</button>
+            </div>
+
+            <div class="p-4 bg-[var(--color-beige)] border-heavy shadow-heavy">
+                <p class="text-xs font-black">💡 หมวดวิชาเลือก</p>
+                <p class="text-xs font-bold text-[var(--color-mute-text)] mt-1">รวบรวมเฉพาะรายวิชาที่ลงท้ายด้วย XX จาก มคอ.๒ โดยแบ่งเป็น ปี 1 เทอม 1 ถึง ปี 4 เทอม 2 (ไม่รวมภาคฤดูร้อน)</p>
+            </div>
+            <div id="electives-container" class="space-y-4">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: CURRICULUM CHECKLIST -->
+        <div id="tab-checklist" class="tab-content hidden space-y-4">
+            <div class="card p-6 bg-[var(--color-beige)]">
+                <h2 class="text-xl font-black italic mb-4 border-b-[4px] border-[var(--color-black)] inline-block pb-1">หน่วยกิตทั้งหมด</h2>
+                <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Injected via JS -->
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Section 2: Curriculum Management -->
-    <section id="curriculum-sec" class="tab-content hidden">
-        <div class="card p-6 bg-white mb-8 border-bold">
-            <h2 class="text-2xl font-black uppercase italic mb-2">Academic Record Management</h2>
-            <p class="text-xs font-bold uppercase opacity-60">คลิกที่ Edit เพื่อแก้ไขข้อมูลวิชา หรือเปลี่ยนเกรดเพื่อคำนวณผลการเรียนใหม่</p>
-        </div>
-
-        <div id="category-container" class="space-y-12 pb-20">
-            <!-- Curriculum rendered here -->
-        </div>
-    </section>
-
-    <!-- Section 3: Audit Log -->
-    <section id="audit-sec" class="tab-content hidden">
-        <div class="card p-6 bg-white border-bold">
-            <h2 class="text-2xl font-black uppercase italic mb-6 flex justify-between items-center">
-                System Audit History
-                <span class="text-xs font-normal bg-black text-white px-2 py-1">Newest First</span>
-            </h2>
-            <div id="audit-log-container" class="space-y-2">
-                <!-- Log entries -->
-            </div>
-        </div>
-    </section>
-</div>
-
-<script>
-    // --- Data Management ---
-    let DATA = [
-        { id: 'c1', group: 'core', code: '321-1101', name: 'สุนทรียศาสตร์ ศิลปะและการออกแบบ', credit: 3, grade: '' },
-        { id: 'c2', group: 'core', code: '321-1102', name: 'องค์ประกอบศิลป์และทฤษฎีสีเพื่อการออกแบบ', credit: 3, grade: '' },
-        { id: 'c3', group: 'core', code: '321-1103', name: 'การวาดภาพเพื่อการออกแบบ', credit: 3, grade: '' },
-        { id: 'c4', group: 'core', code: '321-1104', name: 'คอมพิวเตอร์เพื่อการออกแบบและตกแต่งภาพ', credit: 3, grade: '' },
-        { id: 'c5', group: 'core', code: '321-1105', name: 'คอมพิวเตอร์เพื่อการออกแบบมัลติมีเดีย', credit: 3, grade: '' },
-        { id: 'c6', group: 'core', code: '321-1206', name: 'คอมพิวเตอร์เพื่อการออกแบบ 3 มิติ', credit: 3, grade: '' },
-        { id: 'c7', group: 'core', code: '321-1207', name: 'การสร้างแบบร่างและการสร้างแบบจำลอง', credit: 3, grade: '' },
-        { id: 'c8', group: 'compulsory', code: '321-2101', name: 'การเขียนโปรแกรมเบื้องต้นเพื่อการออกแบบ', credit: 3, grade: '' },
-        { id: 'c9', group: 'compulsory', code: '321-2102', name: 'แนวคิดและการคิดวิเคราะห์เชิงออกแบบ', credit: 3, grade: '' },
-        { id: 'c10', group: 'elective', code: '321-3301', name: 'การออกแบบเพื่อความยั่งยืน', credit: 3, grade: '' }
-    ];
-
-    let auditLogs = [];
-
-    const GROUPS = [
-        { id: 'core', name: 'กลุ่มวิชาแกน (Core)', req: 27 },
-        { id: 'compulsory', name: 'กลุ่มวิชาชีพบังคับ (Major Compulsory)', req: 52 },
-        { id: 'elective', name: 'กลุ่มวิชาชีพเลือก (Major Elective)', req: 15 }
-    ];
-
-    const GRADE_MAP = { 'A': 4, 'B+': 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0, '': null };
-    let editingId = null;
-    let myChart = null;
-
-    // --- Core Functions ---
-    function init() {
-        addAuditLog('System', 'แอปพลิเคชันเริ่มต้นการทำงาน');
-        renderCurriculum();
-        updateStats();
-        initChart();
-    }
-
-    function addAuditLog(action, details) {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('th-TH', { 
-            year: 'numeric', month: 'long', day: 'numeric',
-            hour: '2-digit', minute: '2-digit', second: '2-digit'
-        });
-        
-        auditLogs.unshift({
-            time: dateStr,
-            timestamp: now.getTime(),
-            action: action,
-            details: details
-        });
-        renderAuditLogs();
-    }
-
-    function renderAuditLogs() {
-        const container = document.getElementById('audit-log-container');
-        container.innerHTML = auditLogs.map(log => `
-            <div class="log-item border-bold">
-                <div class="flex justify-between items-start">
-                    <span class="text-[10px] font-black bg-[var(--color-black)] text-white px-2 py-0.5 uppercase tracking-tighter">${log.action}</span>
-                    <span class="text-[10px] font-bold text-gray-500 italic">${log.time}</span>
+        <!-- TAB CONTENT: AUDIT LOG -->
+        <div id="tab-audit-log" class="tab-content hidden space-y-4">
+            <div class="card p-6">
+                <h2 class="text-xl font-black italic mb-4 border-b-[4px] border-[var(--color-black)] inline-block pb-1">ประวัติการแก้ไข</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-bold text-[var(--color-mute-text)]">บันทึกกิจกรรมย้อนหลังการเปลี่ยนแปลงวิชาในระบบ (ไม่บันทึกการเปลี่ยนเกรด)</span>
+                    <button class="btn btn-danger text-xs py-1" onclick="clearAuditLog()">ล้างประวัติทั้งหมดค่ะ</button>
                 </div>
-                <p class="text-xs font-bold mt-1 uppercase">${log.details}</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-heavy text-left text-sm">
+                        <thead class="bg-[var(--color-black)] text-[var(--color-offwhite)] font-black text-xs">
+                            <tr>
+                                <th class="p-3 border-r-[2px] border-[var(--color-black)]">วันเวลา</th>
+                                <th class="p-3 border-r-[2px] border-[var(--color-black)]">กิจกรรม</th>
+                                <th class="p-3">รายละเอียดการเปลี่ยนแปลง</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-log-body">
+                            <!-- Logs injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        `).join('');
-    }
+        </div>
 
-    function updateStats() {
-        let totalPoints = 0;
-        let totalCreditsGraded = 0;
-        let totalCreditsEarned = 0;
-        let hasF = false;
+    </main>
 
-        DATA.forEach(c => {
-            const val = GRADE_MAP[c.grade];
-            if (val !== null) {
-                totalPoints += (val * c.credit);
-                totalCreditsGraded += c.credit;
-                if (val > 0) totalCreditsEarned += c.credit;
-                if (c.grade === 'F') hasF = true;
-            }
-        });
+    <!-- FLOATING QGRADE AI WIDGET -->
+    <div id="qgrade-fab" class="fixed bottom-6 right-6 z-[90] btn btn-yellow rounded-full p-4 flex items-center gap-2 shadow-heavy cursor-pointer animate-bounce" onclick="toggleQgrade()">
+        <span class="relative flex items-center">
+            <!-- Styled Q^ai Logo Container -->
+            <span class="font-black text-2xl leading-none inline-flex items-start select-none mr-1.5 text-[var(--color-black)]">
+                Q<span class="text-[9px] font-black text-[var(--color-purple)] -mt-1 ml-0.5 lowercase">ai</span>
+            </span>
+            <!-- Listening status indicator pulse -->
+            <span id="mic-pulse" class="hidden absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            </span>
+        </span>
+        <span class="font-black text-xs tracking-wider">Qgrade AI</span>
+    </div>
 
-        const gpax = totalCreditsGraded > 0 ? (totalPoints / totalCreditsGraded).toFixed(2) : "0.00";
-        document.getElementById('stat-gpax').innerText = gpax;
-        document.getElementById('stat-credits').innerText = totalCreditsEarned;
-
-        const honorLabel = document.getElementById('honor-label');
-        if (hasF) {
-            honorLabel.innerText = "NOT ELIGIBLE (F)";
-            honorLabel.className = "text-xl font-black uppercase text-red-500";
-        } else if (totalCreditsEarned === 0) {
-            honorLabel.innerText = "NO DATA";
-            honorLabel.className = "text-xl font-black uppercase opacity-30";
-        } else {
-            const g = parseFloat(gpax);
-            if (g >= 3.60) honorLabel.innerText = "1st Class Honor";
-            else if (g >= 3.25) honorLabel.innerText = "2nd Class Honor";
-            else honorLabel.innerText = "Regular Status";
-            honorLabel.className = "text-xl font-black uppercase text-[var(--color-purple)]";
-        }
-
-        renderProgress();
-    }
-
-    function renderProgress() {
-        const container = document.getElementById('progress-list');
-        container.innerHTML = GROUPS.map(g => {
-            const earned = DATA.filter(c => c.group === g.id && GRADE_MAP[c.grade] > 0)
-                               .reduce((sum, c) => sum + c.credit, 0);
-            const pct = Math.min(100, (earned / g.req) * 100);
-            return `
+    <!-- QGRADE CHAT DRAWER WITH REPLY PREVIEW -->
+    <div id="qgrade-chat" class="hidden fixed bottom-24 right-6 w-80 md:w-96 h-[460px] bg-[var(--color-offwhite)] border-heavy shadow-heavy z-[90] flex flex-col font-sans">
+        <!-- Header -->
+        <div class="bg-[var(--color-purple)] text-white p-3 border-b-2 border-[var(--color-black)] flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <!-- Neobrutalist Q^ai Logo inside Chat Header -->
+                <span class="font-black text-xl leading-none inline-flex items-start select-none bg-[var(--color-yellow)] text-black border-[2px] border-[var(--color-black)] p-1 rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    Q<span class="text-[8px] font-black text-[var(--color-purple)] -mt-0.5 ml-0.2 lowercase">ai</span>
+                </span>
                 <div>
-                    <div class="flex justify-between text-[10px] font-black uppercase mb-1">
-                        <span>${g.name}</span>
-                        <span>${earned}/${g.req}</span>
-                    </div>
-                    <div class="h-4 bg-[var(--color-black)] border-2 border-black">
-                        <div class="h-full bg-[var(--color-yellow)] transition-all duration-500" style="width: ${pct}%"></div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    // --- CRUD ---
-    function renderCurriculum() {
-        const container = document.getElementById('category-container');
-        container.innerHTML = GROUPS.map(group => `
-            <div>
-                <div class="flex justify-between items-end border-bottom-bold pb-2 mb-6">
-                    <h3 class="text-2xl font-black uppercase italic">${group.name}</h3>
-                    <button onclick="addNewRow('${group.id}')" class="btn-primary text-xs py-1 px-3">Add Course +</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    ${DATA.filter(c => c.group === group.id).map(c => renderCourseItem(c)).join('')}
+                    <h4 class="font-black text-xs tracking-widest">Qgrade Assistant</h4>
+                    <p class="text-[9px] text-[var(--color-yellow)] font-bold">CDTI Digital Design & Technology</p>
                 </div>
             </div>
-        `).join('');
-    }
-
-    function renderCourseItem(c) {
-        if (editingId === c.id) {
-            return `
-                <div class="card p-4 editing-row">
-                    <div class="grid grid-cols-3 gap-2 mb-3">
-                        <input id="edit-code-${c.id}" type="text" value="${c.code}" class="text-[10px] uppercase col-span-1" placeholder="Code">
-                        <input id="edit-name-${c.id}" type="text" value="${c.name}" class="text-[10px] uppercase col-span-2" placeholder="Name">
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="flex gap-2 items-center">
-                            <span class="text-[10px] font-bold">UNITS:</span>
-                            <input id="edit-credit-${c.id}" type="number" value="${c.credit}" class="w-12 text-center">
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="saveEdit('${c.id}')" class="btn-action bg-green-400">Save</button>
-                            <button onclick="cancelEdit()" class="btn-action bg-gray-300">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        return `
-            <div class="card p-4 flex justify-between items-center bg-white group">
-                <div class="flex-1">
-                    <p class="text-[10px] font-black text-[var(--color-purple)] uppercase">${c.code} • ${c.credit} UNITS</p>
-                    <p class="text-sm font-black uppercase leading-tight">${c.name}</p>
-                    <div class="mt-2 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onclick="startEdit('${c.id}')" class="text-[10px] font-black underline uppercase hover:text-blue-600">Edit</button>
-                        <button onclick="deleteCourse('${c.id}')" class="text-[10px] font-black underline uppercase text-red-600 hover:bg-red-100 px-1">Delete</button>
-                    </div>
-                </div>
-                <div class="ml-4">
-                    <select onchange="updateGrade('${c.id}', this.value)" class="font-black text-lg border-2 border-black">
-                        <option value="">-</option>
-                        ${Object.keys(GRADE_MAP).filter(k => k !== '').map(g => 
-                            `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`
-                        ).join('')}
-                    </select>
+            <button class="font-black text-sm text-white hover:text-[var(--color-yellow)]" onclick="toggleQgrade()">✕</button>
+        </div>
+        
+        <!-- Messages Area -->
+        <div id="qgrade-messages" class="flex-1 p-3 overflow-y-auto space-y-3 bg-[var(--color-offwhite)] text-xs flex flex-col">
+            <!-- Initial bot message -->
+            <div class="bg-[var(--color-offwhite)] border-2 border-[var(--color-black)] p-2 max-w-[85%] rounded-br-lg shadow-[2px_2px_0px_var(--color-black)] self-start mr-auto flex items-start gap-1">
+                <div class="flex-1 text-xs">
+                    <p class="font-bold text-[var(--color-purple)] flex items-center gap-1.5">
+                        Qgrade Assistant 
+                        <span class="font-black text-[11px] leading-none inline-flex items-start select-none bg-[var(--color-yellow)] text-black border border-[var(--color-black)] px-0.5 rounded shadow-[1px_1px_0px_rgba(0,0,0,1)]">
+                            Q<span class="text-[6px] font-black text-[var(--color-purple)] -mt-0.5 ml-0.2 lowercase">ai</span>
+                        </span>
+                    </p>
+                    <p class="mt-1 text-[var(--color-black)] font-semibold">สวัสดีค่ะ! ฉันคือบอท Qgrade Assistant ค่ะ 💖</p>
+                    <p class="mt-1">ฉันพร้อมช่วยคุณกรอกเกรดและเพิ่มวิชาเรียนทันทีด้วยภาษาธรรมชาติและคำสั่งเสียงค่ะ ลองทดสอบพิมพ์หรือพูดสั่งดูนะคะ:</p>
+                    <ul class="list-disc pl-4 mt-1 space-y-1 text-[10px] font-semibold text-[var(--color-mute-text)]">
+                        <li>"สุนทรียศาสตร์ ได้เกรด A"</li>
+                        <li>"รหัส 321-1101 เกรด A"</li>
+                        <li>"เพิ่มวิชา 321-1555 ถ่ายรูปสวยงาม ของปี 3 เทอม 2 หน่วยกิต 2"</li>
+                        <li>"ดู ปี 1 เทอม 1" (เพื่อเรียกดูวิชาและเลือกกรอกเกรดได้ทันทีค่ะ)</li>
+                        <li>"แก้ไข" (เพื่อปรับวิชาที่เพิ่มล่าสุดแบบทีละส่วนค่ะ)</li>
+                    </ul>
                 </div>
             </div>
-        `;
-    }
+        </div>
 
-    function addNewRow(groupId) {
-        const newId = 'c-' + Date.now();
-        const groupName = GROUPS.find(g => g.id === groupId).name;
-        const newCourse = { id: newId, group: groupId, code: 'NEW-000', name: 'รายวิชาใหม่', credit: 3, grade: '' };
-        DATA.push(newCourse);
-        editingId = newId;
-        addAuditLog('Add', `เพิ่มวิชาใหม่ใน ${groupName}`);
-        renderCurriculum();
-    }
+        <!-- Inline Replying Notification preview (Telegram/Slack style) -->
+        <div id="reply-preview-bar" class="hidden bg-gray-200 dark:bg-zinc-800 border-t-2 border-[var(--color-black)] p-2 justify-between items-center text-[10px] font-black italic text-[var(--color-black)]">
+            <span id="reply-preview-text" class="truncate max-w-[85%]">กำลังตอบกลับ: ...</span>
+            <button onclick="cancelReply()" class="text-red-500 font-bold px-1.5 hover:bg-gray-300">✕</button>
+        </div>
 
-    function startEdit(id) {
-        editingId = id;
-        renderCurriculum();
-    }
+        <!-- Input Area with Voice Typing Mic inside text field -->
+        <div class="p-2 bg-[var(--color-offwhite)] border-t-2 border-[var(--color-black)] flex gap-2 items-center">
+            <div class="relative flex-1 flex items-center">
+                <input type="text" id="qgrade-input" placeholder="พิมพ์คุยหรือกดไมค์เพื่อพูด..." class="w-full text-xs pl-2 pr-10 py-1.5 focus:bg-[var(--color-focus-bg)]" onkeydown="if(event.key === 'Enter') sendQgradeMessage()">
+                <div class="absolute right-2 flex items-center gap-1">
+                    <button id="input-mic-btn" class="text-[var(--color-mute-text)] hover:text-red-500 transition-colors cursor-pointer text-sm" onclick="toggleVoiceTyping()" title="พิมพ์ด้วยเสียง">
+                        🎤
+                    </button>
+                </div>
+            </div>
+            <button class="btn btn-purple py-1 px-3 text-xs" onclick="sendQgradeMessage()">ส่งค่ะ</button>
+        </div>
+    </div>
 
-    function cancelEdit() {
-        editingId = null;
-        renderCurriculum();
-    }
+    <!-- CUSTOM CONFIRMATION MODAL -->
+    <div id="custom-confirm-modal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+        <div class="card bg-[var(--color-offwhite)] p-6 max-w-sm w-full space-y-4 border-heavy shadow-heavy">
+            <h3 class="text-lg font-black tracking-tight" id="confirm-title">ยืนยันการทำรายการ</h3>
+            <p class="text-sm font-semibold text-[var(--color-mute-text)]" id="confirm-message">คุณแน่ใจหรือไม่ว่าต้องการดำเนินการสิ่งนี้คะ?</p>
+            <div class="flex justify-end gap-3 pt-2">
+                <button class="btn bg-[var(--color-offwhite)] text-[var(--color-black)] text-xs" onclick="closeConfirmModal()">ยกเลิกค่ะ</button>
+                <button class="btn btn-danger text-xs" id="confirm-action-btn">ตกลงค่ะ</button>
+            </div>
+        </div>
+    </div>
 
-    function saveEdit(id) {
-        const code = document.getElementById(`edit-code-${id}`).value;
-        const name = document.getElementById(`edit-name-${id}`).value;
-        const credit = parseInt(document.getElementById(`edit-credit-${id}`).value) || 0;
+    <script>
+        // --- CONSTANTS & DATABASE ---
+        const CATEGORIES = [
+            { id: 'gened-group', name: 'ศึกษาทั่วไป (สังคม, มนุษย์, วิทย์-คณิต, ภาษา)', req: 33 },
+            { id: 'core', name: 'หมวดวิชาเฉพาะ: กลุ่มวิชาแกน', req: 27 },
+            { id: 'compulsory', name: 'หมวดวิชาเฉพาะ: กลุ่มวิชาชีพบังคับ', req: 52 },
+            { id: 'elective', name: 'หมวดวิชาเฉพาะ: กลุ่มวิชาชีพเลือก', req: 15 },
+            { id: 'free', name: 'หมวดวิชาเลือกเสรี', req: 6 }
+        ];
 
-        const idx = DATA.findIndex(c => c.id === id);
-        if (idx !== -1) {
-            const oldName = DATA[idx].name;
-            DATA[idx].code = code;
-            DATA[idx].name = name;
-            DATA[idx].credit = credit;
-            addAuditLog('Edit', `แก้ไขข้อมูลวิชา: ${oldName} -> ${name} (${credit} หน่วยกิต)`);
+        // Custom Grade Scale
+        const GRADE_MAP = { 
+            'S': 'PASS', 
+            'U': 'UNSATISFACTORY',
+            'A': 4.0, 
+            'B+': 3.5, 
+            'B': 3.0, 
+            'C+': 2.5, 
+            'C': 2.0, 
+            'D+': 2.0, 
+            'D': 1.5, 
+            'F': 1.0, 
+            '-': null 
+        };
+
+        const TERMS = [
+            { id: 'Y1T1', label: 'ปี 1 เทอม 1' }, { id: 'Y1T2', label: 'ปี 1 เทอม 2' }, { id: 'Y1T3', label: 'ปี 1 เทอม 3 (ฤดูร้อน)' },
+            { id: 'Y2T1', label: 'ปี 2 เทอม 1' }, { id: 'Y2T2', label: 'ปี 2 เทอม 2' }, { id: 'Y2T3', label: 'ปี 2 เทอม 3 (ฤดูร้อน)' },
+            { id: 'Y3T1', label: 'ปี 3 เทอม 1' }, { id: 'Y3T2', label: 'ปี 3 เทอม 2' }, { id: 'Y3T3', label: 'ปี 3 เทอม 3 (ฤดูร้อน)' },
+            { id: 'Y4T1', label: 'ปี 4 เทอม 1' }, { id: 'Y4T2', label: 'ปี 4 เทอม 2' }, { id: 'Y4T3', label: 'ปี 4 เทอม 3 (ฤดูร้อน)' }
+        ];
+
+        // Filter out Term 3 for the Electives Tab
+        const ELECTIVE_TERMS = [
+            { id: 'Y1T1', label: 'ปี 1 เทอม 1' }, { id: 'Y1T2', label: 'ปี 1 เทอม 2' },
+            { id: 'Y2T1', label: 'ปี 2 เทอม 1' }, { id: 'Y2T2', label: 'ปี 2 เทอม 2' },
+            { id: 'Y3T1', label: 'ปี 3 เทอม 1' }, { id: 'Y3T2', label: 'ปี 3 เทอม 2' },
+            { id: 'Y4T1', label: 'ปี 4 เทอม 1' }, { id: 'Y4T2', label: 'ปี 4 เทอม 2' }
+        ];
+
+        // Preloaded Curriculum DB from PrograminDigitalDesign.md 
+        const DEFAULT_COURSES = [
+            // ปี 1 เทอม 1
+            { id: 'c_y1t1_1', code: '321-1101', name: 'สุนทรียศาสตร์ ศิลปะและการออกแบบ', credit: 3, term: 'Y1T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_2', code: '321-1102', name: 'องค์ประกอบศิลป์และทฤษฎีสีเพื่อการออกแบบ', credit: 3, term: 'Y1T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_3', code: '321-1103', name: 'การวาดภาพเพื่อการออกแบบ', credit: 3, term: 'Y1T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_4', code: '321-1104', name: 'คอมพิวเตอร์เพื่อการออกแบบและตกแต่งภาพ', credit: 3, term: 'Y1T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_5', code: '920-1135', name: 'สุขภาวะกายและจิต', credit: 3, term: 'Y1T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_6', code: '931-1107', name: 'คณิตศาสตร์และสถิติในชีวิตประจำวัน', credit: 3, term: 'Y1T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t1_7', code: '942-1101', name: 'ภาษาอังกฤษปรับพื้นฐาน 1', credit: 0, term: 'Y1T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+
+            // ปี 1 เทอม 2
+            { id: 'c_y1t2_1', code: '321-2101', name: 'การเขียนโปรแกรมเบื้องต้นเพื่อการออกแบบและเทคโนโลยี', credit: 3, term: 'Y1T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_2', code: '321-2102', name: 'แนวคิดและการคิดวิเคราะห์เชิงออกแบบ', credit: 3, term: 'Y1T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_3', code: '321-2103', name: 'การออกแบบปฏิสัมพันธ์ขั้นพื้นฐาน', credit: 3, term: 'Y1T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_4', code: '321-1105', name: 'คอมพิวเตอร์เพื่องานออกแบบมัลติมีเดีย', credit: 3, term: 'Y1T2', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_5', code: '941-1103', name: 'การอ่านและการเขียนภาษาไทยเพื่ออาชีพ', credit: 2, term: 'Y1T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_6', code: '920-11xx', name: 'วิชาเลือกกลุ่มมนุษยศาสตร์', credit: 2, term: 'Y1T2', category: 'gened-group', grade: '-', isElectiveTab: true },
+            { id: 'c_y1t2_7', code: '941-1102', name: 'ภาษาไทยเพื่อการสื่อสาร', credit: 2, term: 'Y1T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y1t2_8', code: '942-1102', name: 'ภาษาอังกฤษปรับพื้นฐาน 2', credit: 0, term: 'Y1T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+
+            // ปี 2 เทอม 1
+            { id: 'c_y2t1_1', code: '321-1206', name: 'คอมพิวเตอร์เพื่องานออกแบบ 3 มิติ', credit: 3, term: 'Y2T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_2', code: '321-1207', name: 'การสร้างแบบร่างและการสร้างแบบจำลอง', credit: 3, term: 'Y2T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_3', code: '321-1208', name: 'การออกแบบกราฟิก', credit: 3, term: 'Y2T1', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_4', code: '321-2206', name: 'การออกแบบนวัตกรรมดิจิทัลเบื้องต้น', credit: 4, term: 'Y2T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_5', code: '932-1107', name: 'วิทยาศาสตร์เพื่อคุณภาพชีวิต', credit: 3, term: 'Y2T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_6', code: '942-1107', name: 'ภาษาอังกฤษเพื่อการสื่อสาร', credit: 2, term: 'Y2T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t1_7', code: '943-1107', name: 'ภาษาที่สาม 1', credit: 1, term: 'Y2T1', category: 'gened-group', grade: '-', isElectiveTab: false },
+
+            // ปี 2 เทอม 2
+            { id: 'c_y2t2_1', code: '321-1209', name: 'ระบบคอมพิวเตอร์พื้นฐาน', credit: 3, term: 'Y2T2', category: 'core', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_2', code: '321-2204', name: 'ปัจจัยและความสัมพันธ์ระหว่างมนุษย์กับการออกแบบ', credit: 3, term: 'Y2T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_3', code: '321-2205', name: 'การออกแบบเวปไซด์เพื่ออุปกรณ์เคลื่อนที่', credit: 3, term: 'Y2T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_4', code: '321-2207', name: 'การออกแบบนวัตกรรมดิจิทัลเพื่องาน IoT', credit: 4, term: 'Y2T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_5', code: '910-1116', name: 'การคิดสร้างสรรค์เพื่อสังคม', credit: 3, term: 'Y2T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_6', code: '942-1108', name: 'ภาษาอังกฤษเพื่อวิชาชีพ', credit: 2, term: 'Y2T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+            { id: 'c_y2t2_7', code: '943-1108', name: 'ภาษาที่สาม 2', credit: 1, term: 'Y2T2', category: 'gened-group', grade: '-', isElectiveTab: false },
+
+            // ปี 3 เทอม 1
+            { id: 'c_y3t1_1', code: '321-2308', name: 'การออกแบบนวัตกรรมดิจิทัลเชิงสร้างสรรค์ 1', credit: 4, term: 'Y3T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y3t1_2', code: '321-2310', name: 'การออกแบบอินโฟกราฟิก', credit: 3, term: 'Y3T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y3t1_3', code: '321-2311', name: 'สัมมนาการออกแบบและเทคโนโลยี', credit: 3, term: 'Y3T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y3t1_4', code: '321-33xx', name: 'วิชาชีพเลือก 1', credit: 3, term: 'Y3T1', category: 'elective', grade: '-', isElectiveTab: true },
+            { id: 'c_y3t1_5', code: '920-11xx', name: 'วิชาเลือกกลุ่มมนุษยศาสตร์', credit: 1, term: 'Y3T1', category: 'gened-group', grade: '-', isElectiveTab: true },
+            { id: 'c_y3t1_6', code: '910-11xx', name: 'วิชาเลือกกลุ่มสังคมศาสตร์', credit: 3, term: 'Y3T1', category: 'gened-group', grade: '-', isElectiveTab: true },
+            { id: 'c_y3t1_7', code: '942-11xx', name: 'ภาษาที่สาม 3', credit: 1, term: 'Y3T1', category: 'gened-group', grade: '-', isElectiveTab: true },
+
+            // ปี 3 เทอม 2
+            { id: 'c_y3t2_1', code: '321-2309', name: 'การออกแบบนวัตกรรมดิจิทัลเชิงสร้างสรรค์ 2', credit: 4, term: 'Y3T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y3t2_2', code: '321-2312', name: 'จริยธรรมวิชาชีพและการเตรียมความพร้อมเพื่อการทำงาน', credit: 3, term: 'Y3T2', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y3t2_3', code: '321-33xx', name: 'วิชาชีพเลือก 2', credit: 3, term: 'Y3T2', category: 'elective', grade: '-', isElectiveTab: true },
+            { id: 'c_y3t2_4', code: '321-33xx', name: 'วิชาชีพเลือก 3', credit: 3, term: 'Y3T2', category: 'elective', grade: '-', isElectiveTab: true },
+            { id: 'c_y3t2_5', code: '941-1102', name: 'วิชาเลือกภาษาอังกฤษ', credit: 2, term: 'Y3T2', category: 'gened-group', grade: '-', isElectiveTab: true },
+            { id: 'xxx-xxxx', name: 'เลือกเสรี 1', credit: 3, term: 'Y3T2', category: 'free', grade: '-', isElectiveTab: true },
+
+            // ปี 4 เทอม 1
+            { id: 'c_y4t1_1', code: '321-2413', name: 'การค้นคว้าเพื่อการออกแบบ', credit: 3, term: 'Y4T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y4t1_2', code: '321-2414', name: 'เตรียมปริญญานิพนธ์การออกแบบและเทคโนโลยี', credit: 3, term: 'Y4T1', category: 'compulsory', grade: '-', isElectiveTab: false },
+            { id: 'c_y4t1_3', code: '321-33xx', name: 'วิชาชีพเลือก 4', credit: 3, term: 'Y4T1', category: 'elective', grade: '-', isElectiveTab: true },
+            { id: 'c_y4t1_4', code: '321-33xx', name: 'วิชาชีพเลือก 5', credit: 3, term: 'Y4T1', category: 'elective', grade: '-', isElectiveTab: true },
+            { id: 'xxx-xxxx', name: 'เลือกเสรี 2', credit: 3, term: 'Y4T1', category: 'free', grade: '-', isElectiveTab: true },
+            { id: '942-11xx', name: 'วิชาเลือกภาษาอังกฤษ', credit: 2, term: 'Y4T1', category: 'gened-group', grade: '-', isElectiveTab: true },
+
+            // ปี 4 เทอม 2
+            { id: 'c_y4t2_1', code: '321-2415', name: 'ปริญญานิพนธ์การออกแบบและเทคโนโลยี', credit: 6, term: 'Y4T2', category: 'compulsory', grade: '-', isElectiveTab: false }
+        ];
+
+        // --- APPLICATION STATE ---
+        let appData = {
+            profile: { name: 'อัษฎาวุฒิ ดีไซน์', studentId: '6710302008' },
+            courses: [],
+            logs: []
+        };
+
+        // Sub-tabs navigation state (ภาพรวม vs ปี 1-4)
+        let activeCurriculumYear = 'all';
+        let activeElectiveYear = 'all';
+
+        let openTerms = ['Y1T1']; // Track open details accordions
+        let chartInstanceOverview = null;
+        let chartInstanceTermly = null;
+        let currentTrendSubtab = 'overview';
+        let editingCourseId = null;
+        let confirmCallback = null;
+        
+        // Qgrade Assistant Memory State Machine & Reply Feature state
+        let lastActionCourseId = null;
+        let activeReplyMsg = null; // Stores currently selected reply reference
+        
+        let qgradeState = {
+            mode: 'idle', // 'idle', 'awaiting_selection', 'awaiting_edit_type', 'awaiting_direct_grade', 'awaiting_lookup_category', 'awaiting_lookup_term'
+            targetCourseId: null,
+            pendingCourse: null, // Temporary course builder for multi-turn conversational inputs
+            lookupCategory: null // Stores 'all' or 'elective' during step-by-step navigation
+        };
+
+        // --- SPEECH RECOGNITION (AUDIO ENGINE) STATE ---
+        let recognition = null;
+        let isSpeechEngineActive = false; // Background global listening state
+        let isMicRecording = false; // Is mic actively capturing sound for background trigger
+        let isDictating = false; // Is active dictation to input field enabled
+        let currentLang = 'th-TH'; // Locked to Thai language
+
+        const SUN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+        </svg>`;
+
+        const MOON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>`;
+
+        // --- THEME MANAGEMENT ENGINE ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('gradeInsightTheme_v16') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            updateThemeToggleUI();
         }
 
-        editingId = null;
-        renderCurriculum();
-        updateStats();
-    }
-
-    function deleteCourse(id) {
-        const course = DATA.find(c => c.id === id);
-        if (course && confirm(`ต้องการลบวิชา "${course.name}" หรือไม่?`)) {
-            DATA = DATA.filter(c => c.id !== id);
-            addAuditLog('Delete', `ลบวิชา: ${course.name} [${course.code}]`);
-            renderCurriculum();
-            updateStats();
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const activeTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('gradeInsightTheme_v16', activeTheme);
+            updateThemeToggleUI();
+            
+            // Re-render components and redraw Chart.js dynamically to apply dark/light configurations
+            calculateAndRenderStats();
+            renderSemesters();
+            renderElectiveSemesters();
         }
-    }
 
-    function updateGrade(id, grade) {
-        const idx = DATA.findIndex(c => c.id === id);
-        if (idx !== -1) {
-            const oldGrade = DATA[idx].grade || 'N/A';
-            DATA[idx].grade = grade;
-            addAuditLog('Update Grade', `เปลี่ยนเกรดวิชา ${DATA[idx].name}: ${oldGrade} -> ${grade || 'N/A'}`);
-            updateStats();
+        function updateThemeToggleUI() {
+            const isDark = document.body.classList.contains('dark-mode');
+            // If in dark mode, we display the sun icon to switch to light, and vice versa
+            const svgContent = isDark ? SUN_SVG : MOON_SVG;
+            
+            const desktopToggle = document.getElementById('theme-toggle-desktop');
+            const mobileToggle = document.getElementById('theme-toggle-mobile');
+            
+            if (desktopToggle) desktopToggle.innerHTML = svgContent;
+            if (mobileToggle) mobileToggle.innerHTML = svgContent;
         }
-    }
 
-    // --- UI Helpers ---
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-        document.getElementById(`${tab}-sec`).classList.remove('hidden');
-        document.getElementById(`tab-${tab}`).classList.add('tab-active');
-    }
+        // --- CUSTOM CONFIRMATION MODAL ---
+        function showCustomConfirm(title, message, callback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            document.getElementById('custom-confirm-modal').classList.remove('hidden');
+            confirmCallback = callback;
+        }
 
-    function initChart() {
-        const ctx = document.getElementById('gpaChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Start', 'Term 1', 'Term 2', 'Term 3', 'Current'],
-                datasets: [{
-                    label: 'GPA',
-                    data: [0, 0, 0, 0, 0],
-                    borderColor: '#2B2B2B',
-                    backgroundColor: 'rgba(91, 73, 214, 0.1)',
-                    borderWidth: 6,
-                    pointRadius: 6,
-                    pointBackgroundColor: '#FFD34D',
-                    fill: true,
-                    tension: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { min: 0, max: 4, ticks: { font: { weight: 'bold' } } },
-                    x: { ticks: { font: { weight: 'bold' } } }
+        function closeConfirmModal() {
+            document.getElementById('custom-confirm-modal').classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        document.getElementById('confirm-action-btn').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirmModal();
+        });
+
+        // Initialize App on window load
+        function initApp() {
+            initTheme(); // Establish dark/light preference before launching content
+            
+            const savedData = localStorage.getItem('gradeInsightData_cdt_v16');
+            const defaultIds = DEFAULT_COURSES.map(c => c.id);
+            
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                if (!appData.logs) appData.logs = [];
+                
+                // DATA SANITIZATION: Force all default templates to never have user-added state
+                appData.courses.forEach(c => {
+                    if (defaultIds.includes(c.id)) {
+                        c.isUserAdded = false; 
+                    }
+                    if (c.isElectiveTab === undefined) {
+                        c.isElectiveTab = isElectiveXX(c.code);
+                    }
+                });
+            } else {
+                appData.courses = JSON.parse(JSON.stringify(DEFAULT_COURSES));
+                appData.courses.forEach(c => {
+                    c.isUserAdded = false;
+                });
+                appData.profile = { name: 'อัษฎาวุฒิ ดีไซน์', studentId: '6710302008' };
+                logAction('ระบบเริ่มต้น', 'โครงสร้างและรายวิชาหลักสูตร CDTI ได้รับการโหลดเสร็จสมบูรณ์ค่ะ');
+                saveData();
+            }
+            renderProfile();
+            updateAndRenderAll();
+            
+            // Background activation on first gesture
+            document.body.addEventListener('click', () => {
+                initGlobalVoiceEngine();
+            }, { once: true });
+        }
+
+        function saveData() {
+            localStorage.setItem('gradeInsightData_cdt_v16', JSON.stringify(appData));
+        }
+
+        // Keep details tags open state synchronized
+        function syncOpenStates() {
+            const accordions = document.querySelectorAll('.term-accordion');
+            if (accordions.length > 0) {
+                openTerms = [];
+                accordions.forEach(acc => {
+                    if (acc.open) {
+                        openTerms.push(acc.getAttribute('data-term-id'));
+                    }
+                });
+            }
+        }
+
+        // Helper function for checking placeholders
+        function isElectiveXX(code) {
+            if (!code) return false;
+            const normalized = code.toLowerCase();
+            return normalized.endsWith('xx') || normalized.includes('xxxx');
+        }
+
+        function updateAndRenderAll() {
+            saveData();
+            renderSemesters();
+            renderElectiveSemesters();
+            renderChecklist();
+            calculateAndRenderStats();
+            renderAuditLog();
+        }
+
+        // Sub-tabs navigation functions
+        function setCurriculumSubtab(yearId) {
+            activeCurriculumYear = yearId;
+            const buttons = document.querySelectorAll('.subtab-btn');
+            buttons.forEach(btn => {
+                if (btn.id === `subtab-cur-${yearId}`) {
+                    btn.className = "subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-yellow)] text-black active-tab";
+                } else {
+                    btn.className = "subtab-btn btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]";
+                }
+            });
+            renderSemesters();
+        }
+
+        function setElectiveSubtab(yearId) {
+            activeElectiveYear = yearId;
+            const buttons = document.querySelectorAll('.subtab-btn-elec');
+            buttons.forEach(btn => {
+                if (btn.id === `subtab-elec-${yearId}`) {
+                    btn.className = "subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-yellow)] text-black active-tab";
+                } else {
+                    btn.className = "subtab-btn-elec btn text-[10px] py-1 px-3 bg-[var(--color-offwhite)] text-[var(--color-black)]";
+                }
+            });
+            renderElectiveSemesters();
+        }
+
+        function setTrendSubtab(subtab) {
+            currentTrendSubtab = subtab;
+            
+            const tabs = ['overview', 'yearly', 'termly'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`btn-trend-${t}`);
+                if (t === subtab) {
+                    btn.className = "btn text-[10px] py-1 px-2.5 bg-[var(--color-purple)] text-white";
+                    document.getElementById(`trend-content-${t}`)?.classList.remove('hidden');
+                } else {
+                    btn.className = "btn text-[10px] py-1 px-2.5 bg-[var(--color-offwhite)] text-[var(--color-black)]";
+                    document.getElementById(`trend-content-${t}`)?.classList.add('hidden');
+                }
+            });
+
+            calculateAndRenderStats();
+        }
+
+        // Realtime GPAX and predictions logic
+        function calculateAndRenderStats() {
+            let totalPoints = 0;
+            let totalCreditsForGpa = 0;
+            let totalCreditsEarned = 0;
+            let hasFOrU = false;
+
+            let termGpas = [];
+            let termLabels = [];
+            let activeTermsList = [];
+
+            // Core state for yearly aggregates
+            let yearlyData = {
+                Y1: { name: 'ปี 1', terms: ['Y1T1', 'Y1T2', 'Y1T3'], points: 0, credits: 0, termGpas: {} },
+                Y2: { name: 'ปี 2', terms: ['Y2T1', 'Y2T2', 'Y2T3'], points: 0, credits: 0, termGpas: {} },
+                Y3: { name: 'ปี 3', terms: ['Y3T1', 'Y3T2', 'Y3T3'], points: 0, credits: 0, termGpas: {} },
+                Y4: { name: 'ปี 4', terms: ['Y4T1', 'Y4T2', 'Y4T3'], points: 0, credits: 0, termGpas: {} }
+            };
+
+            TERMS.forEach(termObj => {
+                let termPoints = 0;
+                let termCr = 0;
+                let termEarned = 0;
+
+                const yearKey = termObj.id.substring(0, 2); // 'Y1', 'Y2', etc.
+                const termCourses = appData.courses.filter(c => c.term === termObj.id);
+                
+                termCourses.forEach(c => {
+                    if (c.grade === 'F' || c.grade === 'U') {
+                        hasFOrU = true;
+                    }
+
+                    if (c.grade === 'S') {
+                        termEarned += Number(c.credit);
+                    } else if (c.grade === 'U') {
+                        // Grade U has NO earned credits and NO GPA impact (failed non-GPA)
+                    } else if (c.grade && c.grade !== '-') {
+                        const gp = GRADE_MAP[c.grade];
+                        if (gp !== null && gp !== undefined) {
+                            termPoints += (gp * Number(c.credit));
+                            termCr += Number(c.credit);
+                            if (c.grade !== 'F') {
+                                termEarned += Number(c.credit);
+                            }
+                        }
+                    }
+                });
+
+                if (termCr > 0 || termEarned > 0) {
+                    const gpaVal = termCr > 0 ? (termPoints / termCr).toFixed(2) : "0.00";
+                    let shortLabel = termObj.label.replace('ภาคการศึกษาที่ ', 'T').replace('ฤดูร้อน', 'Summer');
+                    termLabels.push(shortLabel);
+                    termGpas.push(gpaVal);
+                    activeTermsList.push(termObj.id);
+
+                    totalPoints += termPoints;
+                    totalCreditsForGpa += termCr;
+                    totalCreditsEarned += termEarned;
+
+                    // Populate yearly database
+                    if (termCr > 0) {
+                        yearlyData[yearKey].points += termPoints;
+                        yearlyData[yearKey].credits += termCr;
+                        yearlyData[yearKey].termGpas[termObj.id] = gpaVal;
+                    }
+                } else if (termCourses.length > 0) {
+                    yearlyData[yearKey].termGpas[termObj.id] = '-';
+                }
+            });
+
+            // Post-aggregate overall Yearly GPA
+            Object.keys(yearlyData).forEach(yKey => {
+                const y = yearlyData[yKey];
+                y.gpa = y.credits > 0 ? (y.points / y.credits).toFixed(2) : "0.00";
+            });
+
+            // Global Danger Alert Indicator Toggle
+            const dangerAlert = document.getElementById('danger-trend-alert');
+            if (dangerAlert) {
+                if (hasFOrU) {
+                    dangerAlert.classList.remove('hidden');
+                } else {
+                    dangerAlert.classList.add('hidden');
                 }
             }
-        });
-    }
 
-    window.onload = init;
-</script>
+            // Calculate overall GPAX with graded courses
+            const gpax = totalCreditsForGpa > 0 ? (totalPoints / totalCreditsForGpa).toFixed(2) : "0.00";
+            document.getElementById('stat-gpax').innerText = gpax;
 
+            // Student Academic Status Rule engine
+            const statusEl = document.getElementById('stat-status');
+            const gNum = parseFloat(gpax);
+            if (totalCreditsForGpa === 0 && totalCreditsEarned === 0) {
+                statusEl.innerText = "สถานภาพ: ปกติ (เริ่มบันทึก)ค่ะ";
+                statusEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-offwhite)] text-[var(--color-mute-text)]";
+            } else if (gNum < 1.50) {
+                statusEl.innerText = "สถานภาพ: พ้นสภาพ (Dismissed)ค่ะ";
+                statusEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-pink-dark)] text-black";
+            } else if (gNum < 2.00) {
+                statusEl.innerText = "สถานภาพ: วิทยาทัณฑ์ (Probation)ค่ะ";
+                statusEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-yellow)] text-black";
+            } else {
+                statusEl.innerText = "สถานภาพ: ปกติ (Normal)ค่ะ";
+                statusEl.className = "border-heavy p-2 text-xs font-black bg-emerald-400 text-black";
+            }
+
+            // Honors Prediction Engine (disqualified if failed via F or U)
+            const honorsEl = document.getElementById('stat-honors');
+            if (hasFOrU) {
+                honorsEl.innerText = "เกียรตินิยม: หมดสิทธิ์ (ติด F/U)ค่ะ";
+                honorsEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-pink-dark)] text-black";
+            } else if (totalCreditsForGpa === 0) {
+                honorsEl.innerText = "เกียรตินิยม: รอคำนวณค่ะ";
+                honorsEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-beige)] text-[var(--color-black)]";
+            } else if (gNum >= 3.75) {
+                honorsEl.innerText = "เกียรตินิยม: อันดับ 1 ค่ะ";
+                honorsEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-purple)] text-white";
+            } else if (gNum >= 3.25) {
+                honorsEl.innerText = "เกียรตินิยม: อันดับ 2 ค่ะ";
+                honorsEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-yellow)] text-black";
+            } else {
+                honorsEl.innerText = "เกียรตินิยม: ไม่เข้าเกณฑ์ค่ะ";
+                honorsEl.className = "border-heavy p-2 text-xs font-black bg-[var(--color-offwhite)] text-[var(--color-mute-text)] shadow-none border-2";
+            }
+
+            // Render active subtab view
+            if (currentTrendSubtab === 'overview') {
+                renderOverviewChart(termLabels, termGpas, activeTermsList, yearlyData);
+            } else if (currentTrendSubtab === 'termly') {
+                renderTermlyChart(termLabels, termGpas, activeTermsList);
+            } else if (currentTrendSubtab === 'yearly') {
+                destroyCharts();
+                renderYearlyCards(yearlyData);
+            }
+        }
+
+        function destroyCharts() {
+            if (chartInstanceOverview) {
+                chartInstanceOverview.destroy();
+                chartInstanceOverview = null;
+            }
+            if (chartInstanceTermly) {
+                chartInstanceTermly.destroy();
+                chartInstanceTermly = null;
+            }
+        }
+
+        // Helper to generate dynamic point configurations if term contains F or U
+        function generatePointConfigs(activeTermsList) {
+            let pointBgColors = [];
+            let pointBorderColors = [];
+            let pointBorderWidths = [];
+            let pointRadii = [];
+            let pointHoverRadii = [];
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const themePurple = isDark ? '#818CF8' : '#5B49D6';
+            const themeBorder = isDark ? '#F4F4F5' : '#2B2B2B';
+
+            activeTermsList.forEach(tId => {
+                const termCourses = appData.courses.filter(c => c.term === tId);
+                const termHasFOrU = termCourses.some(c => c.grade === 'F' || c.grade === 'U');
+                
+                if (termHasFOrU) {
+                    pointBgColors.push('#EF4444'); // Vivid Alert Red
+                    pointBorderColors.push('#B91C1C'); // Dark Crimson
+                    pointBorderWidths.push(4);
+                    pointRadii.push(9); // Prominent larger circle
+                    pointHoverRadii.push(11);
+                } else {
+                    pointBgColors.push(themePurple); 
+                    pointBorderColors.push(themeBorder);
+                    pointBorderWidths.push(2);
+                    pointRadii.push(5);
+                    pointHoverRadii.push(7);
+                }
+            });
+
+            return { pointBgColors, pointBorderColors, pointBorderWidths, pointRadii, pointHoverRadii };
+        }
+
+        // Render Mixed Chart: Overview (Yearly + Termly GPAs)
+        function renderOverviewChart(termLabels, termGpas, activeTermsList, yearlyData) {
+            destroyCharts();
+            
+            // Build dynamic Yearly GPA line mapping corresponding to plotted active terms
+            let yearlyGpaForTerms = [];
+            activeTermsList.forEach(tId => {
+                const yearKey = tId.substring(0, 2);
+                yearlyGpaForTerms.push(yearlyData[yearKey].gpa);
+            });
+
+            const pts = generatePointConfigs(activeTermsList);
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const gridColor = isDark ? '#3F3F46' : '#E5E5E5';
+            const tickColor = isDark ? '#F4F4F5' : '#2B2B2B';
+            const purpleLineColor = isDark ? '#818CF8' : '#5B49D6';
+            const yellowLineColor = isDark ? '#FACC15' : '#FFD34D';
+
+            const ctx = document.getElementById('trendChartOverview').getContext('2d');
+            chartInstanceOverview = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: termLabels.length > 0 ? termLabels : ['ไม่มีข้อมูล'],
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'เกรดรายเทอม',
+                            data: termGpas.length > 0 ? termGpas : [0.00],
+                            borderColor: purpleLineColor,
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            pointBackgroundColor: pts.pointBgColors,
+                            pointBorderColor: pts.pointBorderColors,
+                            pointBorderWidth: pts.pointBorderWidths,
+                            pointRadius: pts.pointRadii,
+                            pointHoverRadius: pts.pointHoverRadii,
+                            tension: 0.1,
+                            order: 1
+                        },
+                        {
+                            type: 'line',
+                            label: 'เกรดเฉลี่ยสะสมรายปี',
+                            data: yearlyGpaForTerms.length > 0 ? yearlyGpaForTerms : [0.00],
+                            borderColor: yellowLineColor,
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            borderDash: [6, 6],
+                            pointRadius: 4,
+                            pointBackgroundColor: tickColor,
+                            tension: 0,
+                            order: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            display: true, 
+                            labels: { 
+                                color: tickColor,
+                                font: { weight: 'bold', family: 'Inter', size: 10 } 
+                            }
+                        } 
+                    },
+                    scales: {
+                        y: { 
+                            min: 0, 
+                            max: 4, 
+                            ticks: { color: tickColor, font: { weight: 'bold', family: 'Inter' } },
+                            grid: { color: gridColor }
+                        },
+                        x: { 
+                            ticks: { color: tickColor, font: { weight: 'bold', family: 'Inter' } },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Line Chart: Termly with red warnings
+        function renderTermlyChart(termLabels, termGpas, activeTermsList) {
+            destroyCharts();
+            const pts = generatePointConfigs(activeTermsList);
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const gridColor = isDark ? '#3F3F46' : '#E5E5E5';
+            const tickColor = isDark ? '#F4F4F5' : '#2B2B2B';
+            const yellowLineColor = isDark ? '#FACC15' : '#FFD34D';
+
+            const ctx = document.getElementById('trendChartTermly').getContext('2d');
+            chartInstanceTermly = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: termLabels.length > 0 ? termLabels : ['ไม่มีข้อมูล'],
+                    datasets: [{
+                        label: 'เกรดเฉลี่ยรายเทอม',
+                        data: termGpas.length > 0 ? termGpas : [0.00],
+                        borderColor: tickColor,
+                        backgroundColor: yellowLineColor,
+                        borderWidth: 4,
+                        pointBackgroundColor: pts.pointBgColors,
+                        pointBorderColor: pts.pointBorderColors,
+                        pointBorderWidth: pts.pointBorderWidths,
+                        pointRadius: pts.pointRadii,
+                        pointHoverRadius: pts.pointHoverRadii,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            min: 0, 
+                            max: 4, 
+                            ticks: { color: tickColor, font: { weight: 'bold', family: 'Inter' } },
+                            grid: { color: gridColor }
+                        },
+                        x: { 
+                            ticks: { color: tickColor, font: { weight: 'bold', family: 'Inter' } },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Cards: Yearly with red highlight on failed terms (F/U)
+        function renderYearlyCards(yearlyData) {
+            const container = document.getElementById('yearly-trend-container');
+            let html = '';
+
+            Object.keys(yearlyData).forEach(yKey => {
+                const y = yearlyData[yKey];
+                
+                // Collect dynamic term breakdown with warning overlays if F or U is found
+                let termBreakdowns = [];
+                y.terms.forEach(tId => {
+                    const termCourses = appData.courses.filter(c => c.term === tId);
+                    
+                    // Skip Term 3 (Summer) if it has zero registered courses
+                    if (tId.endsWith('T3') && termCourses.length === 0) {
+                        return;
+                    }
+
+                    const label = tId.endsWith('T1') ? 'เทอม 1' : (tId.endsWith('T2') ? 'เทอม 2' : 'เทอม 3 (ฤดูร้อน)');
+                    const gpaVal = y.termGpas[tId] || '-';
+                    const termHasFOrU = termCourses.some(c => c.grade === 'F' || c.grade === 'U');
+                    
+                    const cardStyle = termHasFOrU 
+                        ? 'bg-red-50 dark:bg-red-950/20 border-[3px] border-red-500 text-red-600 shadow-[2px_2px_0px_rgba(239,68,68,1)] animate-pulse' 
+                        : 'bg-[var(--color-offwhite)] border-2 border-[var(--color-black)] text-[var(--color-purple)] shadow-[1px_1px_0px_var(--color-black)]';
+                    const labelStyle = termHasFOrU ? 'text-red-500 font-black' : 'text-[var(--color-mute-text)]';
+                    const gpaTextStyle = termHasFOrU ? 'text-red-700 dark:text-red-400 font-black' : 'text-[var(--color-purple)] font-black';
+
+                    termBreakdowns.push(`
+                        <div class="${cardStyle} p-2 text-center transition-all">
+                            <p class="text-[9px] font-bold uppercase ${labelStyle}">${label}</p>
+                            <p class="text-xs mt-0.5 ${gpaTextStyle}">${gpaVal} ${termHasFOrU ? '⚠️' : ''}</p>
+                        </div>
+                    `);
+                });
+
+                const colsCount = termBreakdowns.length;
+
+                html += `
+                    <div class="border-heavy bg-[var(--color-offwhite)] p-3 shadow-[2px_2px_0px_var(--color-black)] flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-3 border-b-2 border-[var(--color-black)] pb-1.5">
+                            <span class="font-black text-xs text-[var(--color-black)] uppercase">${y.name} (GPA)</span>
+                            <span class="text-xs font-black bg-[var(--color-yellow)] text-black px-2.5 py-0.5 border-2 border-[var(--color-black)] shadow-[1px_1px_0px_var(--color-black)]">${y.gpa}</span>
+                        </div>
+                        <div class="grid gap-2" style="grid-template-columns: repeat(${colsCount}, minmax(0, 1fr));">
+                            ${termBreakdowns.join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // --- STREAMING_CHUNK:Adjusting colors for components and badges... -->
+        // Render Tab 1: Academic Records (Non-elective locked courses only)
+        function renderSemesters() {
+            const container = document.getElementById('semesters-container');
+            let html = '';
+
+            const years = [
+                { id: 'Y1', label: 'ชั้นปีที่ 1', ids: ['Y1T1', 'Y1T2', 'Y1T3'] },
+                { id: 'Y2', label: 'ชั้นปีที่ 2', ids: ['Y2T1', 'Y2T2', 'Y2T3'] },
+                { id: 'Y3', label: 'ชั้นปีที่ 3', ids: ['Y3T1', 'Y3T2', 'Y3T3'] },
+                { id: 'Y4', label: 'ชั้นปีที่ 4', ids: ['Y4T1', 'Y4T2', 'Y4T3'] }
+            ];
+
+            // Filter years based on subtab selection
+            const filteredYears = activeCurriculumYear === 'all' 
+                ? years 
+                : years.filter(y => y.id === activeCurriculumYear);
+
+            if (filteredYears.length === 0) {
+                container.innerHTML = `<p class="p-6 text-center font-bold text-[var(--color-mute-text)] bg-[var(--color-offwhite)] border-heavy">ไม่มีข้อมูลวิชาในชั้นปีนี้ค่ะ</p>`;
+                return;
+            }
+
+            filteredYears.forEach(year => {
+                html += `
+                    <div class="year-group space-y-3 mb-6">
+                        <div class="border-heavy bg-[var(--color-yellow)] text-black px-4 py-1.5 font-black text-sm inline-block shadow-heavy mb-2">${year.label}</div>
+                        <div class="space-y-4">
+                `;
+                
+                year.ids.forEach(termId => {
+                    const term = TERMS.find(t => t.id === termId);
+                    if (!term) return;
+
+                    const termCourses = appData.courses.filter(c => c.term === term.id && !c.isElectiveTab);
+                    const isOpen = openTerms.includes(term.id) ? 'open' : '';
+
+                    // Calculate GPA for standard courses of this term dynamically
+                    let termPoints = 0;
+                    let termCr = 0;
+                    termCourses.forEach(c => {
+                        if (c.grade && c.grade !== '-' && c.grade !== 'S') {
+                            const gp = GRADE_MAP[c.grade];
+                            if (gp !== null && gp !== undefined) {
+                                termPoints += (gp * Number(c.credit));
+                                termCr += Number(c.credit);
+                            }
+                        }
+                    });
+                    const termGpa = termCr > 0 ? (termPoints / termCr).toFixed(2) : "0.00";
+
+                    const isTerm3 = term.id.endsWith('T3');
+                    const addCourseFormHtml = isTerm3 ? `
+                        <div class="border-heavy border-dashed p-3 bg-[var(--color-offwhite)] mt-4">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+                                <input type="text" id="add-code-${term.id}" value="รหัสวิชา" class="md:col-span-3 text-xs uppercase font-bold" onfocus="this.select();">
+                                <input type="text" id="add-name-${term.id}" value="ชื่อรายวิชา" class="md:col-span-4 text-xs font-bold" onfocus="this.select();">
+                                <input type="number" id="add-cr-${term.id}" value="3" class="md:col-span-2 text-xs text-center font-bold" onfocus="this.select();">
+                                <select id="add-cat-${term.id}" class="md:col-span-3 text-xs font-bold">
+                                    ${CATEGORIES.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <button onclick="addCourse('${term.id}', false)" class="btn btn-purple w-full text-xs">+ เพิ่มรายวิชาในภาคการศึกษานี้ค่ะ</button>
+                        </div>
+                    ` : '';
+
+                    html += `
+                        <details class="term-accordion card" data-term-id="${term.id}" ${isOpen}>
+                            <summary class="p-4 bg-[var(--color-header-bg)] text-[var(--color-header-text)] font-black text-sm md:text-base flex justify-between items-center outline-none select-none border-b-2 border-[var(--color-black)]" onclick="syncOpenStates()">
+                                <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                    <span>${term.label}</span>
+                                    <span class="text-xs text-[var(--color-yellow)] font-bold">GPA: ${termGpa}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs bg-[var(--color-yellow)] text-black px-2 py-1">${termCourses.length} วิชา</span>
+                                    <span class="icon-toggle transition-transform duration-100">▼</span>
+                                </div>
+                            </summary>
+                            <div class="p-4 space-y-3 bg-[var(--color-offwhite)]">
+                                ${termCourses.map(c => renderCourseRow(c)).join('')}
+                                ${addCourseFormHtml}
+                            </div>
+                        </details>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Render Tab 2: Special Electives tab (Only elective locked courses grouped by Y1T1 to Y4T2, no T3)
+        function renderElectiveSemesters() {
+            const container = document.getElementById('electives-container');
+            let html = '';
+
+            const years = [
+                { id: 'Y1', label: 'ชั้นปีที่ 1 (วิชาเลือก)', ids: ['Y1T1', 'Y1T2'] },
+                { id: 'Y2', label: 'ชั้นปีที่ 2 (วิชาเลือก)', ids: ['Y2T1', 'Y2T2'] },
+                { id: 'Y3', label: 'ชั้นปีที่ 3 (วิชาเลือก)', ids: ['Y3T1', 'Y3T2'] },
+                { id: 'Y4', label: 'ชั้นปีที่ 4 (วิชาเลือก)', ids: ['Y4T1', 'Y4T2'] }
+            ];
+
+            const filteredYears = activeElectiveYear === 'all' 
+                ? years 
+                : years.filter(y => y.id === activeElectiveYear);
+
+            if (filteredYears.length === 0) {
+                container.innerHTML = `<p class="p-6 text-center font-bold text-[var(--color-mute-text)] bg-[var(--color-offwhite)] border-heavy">ไม่มีข้อมูลวิชาเลือกในชั้นปีนี้ค่ะ</p>`;
+                return;
+            }
+
+            filteredYears.forEach(year => {
+                html += `
+                    <div class="year-group space-y-3 mb-6">
+                        <div class="border-heavy bg-[var(--color-beige)] text-[var(--color-black)] px-4 py-1.5 font-black text-sm inline-block shadow-heavy mb-2">${year.label}</div>
+                        <div class="space-y-4">
+                `;
+
+                year.ids.forEach(termId => {
+                    const term = ELECTIVE_TERMS.find(t => t.id === termId);
+                    if (!term) return;
+
+                    const termCourses = appData.courses.filter(c => c.term === term.id && c.isElectiveTab);
+                    const isOpen = openTerms.includes(`elec_${term.id}`) ? 'open' : '';
+
+                    const addCourseFormHtml = `
+                        <div class="border-heavy border-dashed p-3 bg-[var(--color-offwhite)] mt-4">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+                                <input type="text" id="add-elec-code-${term.id}" value="321-33XX" class="md:col-span-3 text-xs uppercase font-bold" onfocus="this.select();">
+                                <input type="text" id="add-elec-name-${term.id}" value="วิชาเลือกที่คุณต้องการเพิ่ม" class="md:col-span-4 text-xs font-bold" onfocus="this.select();">
+                                <input type="number" id="add-elec-cr-${term.id}" value="3" class="md:col-span-2 text-xs text-center font-bold" onfocus="this.select();">
+                                <select id="add-elec-cat-${term.id}" class="md:col-span-3 text-xs font-bold">
+                                    ${CATEGORIES.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <button onclick="addCourse('${term.id}', true)" class="btn btn-purple w-full text-xs">+ เพิ่มวิชาเลือกใหม่ใน ${term.label} ค่ะ</button>
+                        </div>
+                    `;
+
+                    html += `
+                        <details class="term-accordion card" data-term-id="elec_${term.id}" ${isOpen}>
+                            <summary class="p-4 bg-[var(--color-header-bg)] text-[var(--color-header-text)] font-black text-sm md:text-base flex justify-between items-center outline-none select-none border-b-2 border-[var(--color-black)]" onclick="syncOpenStates()">
+                                <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                    <span>${term.label}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs bg-[var(--color-yellow)] text-black px-2 py-1">${termCourses.length} วิชา</span>
+                                    <span class="icon-toggle transition-transform duration-100">▼</span>
+                                </div>
+                            </summary>
+                            <div class="p-4 space-y-3 bg-[var(--color-offwhite)]">
+                                ${termCourses.map(c => renderCourseRow(c)).join('')}
+                                ${addCourseFormHtml}
+                            </div>
+                        </details>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Render Singular Course Row
+        function renderCourseRow(course) {
+            if (editingCourseId === course.id) {
+                return `
+                    <div class="border-heavy bg-[var(--color-yellow)] p-3 shadow-heavy">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+                            <input type="text" id="edit-code-${course.id}" value="${course.code || ''}" class="md:col-span-2 text-xs font-black uppercase" onfocus="this.select()" oninput="handleFieldInput('${course.id}', 'code', this.value)">
+                            <input type="text" id="edit-name-${course.id}" value="${course.name || ''}" class="md:col-span-5 text-xs font-black" onfocus="this.select()" oninput="handleFieldInput('${course.id}', 'name', this.value)">
+                            <input type="number" id="edit-cr-${course.id}" value="${course.credit || 0}" class="md:col-span-2 text-xs text-center font-black" onfocus="this.select()" oninput="handleFieldInput('${course.id}', 'credit', this.value)">
+                            <select id="edit-cat-${course.id}" class="md:col-span-3 text-xs font-black" onchange="handleFieldInput('${course.id}', 'category', this.value)">
+                                ${CATEGORIES.map(cat => `<option value="${cat.id}" ${course.category === cat.id ? 'selected' : ''}>${cat.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="finishEditing('${course.id}')" class="btn btn-purple text-xs">เสร็จสิ้น (Done)ค่ะ</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const catName = CATEGORIES.find(c => c.id === course.category)?.name || 'ไม่ระบุหมวดหมู่';
+            const hasFOrUAlert = course.grade === 'F' || course.grade === 'U';
+
+            return `
+                <div class="border-heavy ${hasFOrUAlert ? 'bg-red-50 dark:bg-red-950/20 border-red-500' : 'bg-[var(--color-offwhite)]'} p-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 hover:shadow-heavy transition-shadow duration-100">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <span class="text-[10px] font-black ${hasFOrUAlert ? 'bg-red-600' : 'bg-[var(--color-black)]'} text-[var(--color-offwhite)] px-2 py-0.5 uppercase">${course.code || 'NEW-000'}</span>
+                            <span class="text-[10px] font-bold ${hasFOrUAlert ? 'text-red-600' : 'text-[var(--color-purple)]'}">${catName}</span>
+                            ${hasFOrUAlert ? '<span class="text-[10px] font-black bg-red-100 text-red-700 px-1.5 py-0.2 rounded">🚨 เรียนไม่ผ่านค่ะ</span>' : ''}
+                        </div>
+                        <div class="font-black text-sm">${course.name || 'ไม่มีชื่อวิชา'}</div>
+                        <div class="text-xs font-bold text-[var(--color-mute-text)]">${course.credit || 0} หน่วยกิต</div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <!-- Dropdown Grade Selector -->
+                        <select onchange="updateGrade('${course.id}', this.value)" class="text-sm md:text-base font-black border-heavy w-32 text-center cursor-pointer shadow-heavy hover:bg-[var(--color-focus-bg)] ${hasFOrUAlert ? 'border-red-500 text-red-600 bg-red-100' : ''}">
+                            <option value="-" ${course.grade === '-' ? 'selected' : ''}>- (ยังไม่เรียน)</option>
+                            <option value="S" ${course.grade === 'S' ? 'selected' : ''}>S (ผ่าน)</option>
+                            <option value="U" ${course.grade === 'U' ? 'selected' : ''}>U (ไม่ผ่าน)</option>
+                            ${Object.keys(GRADE_MAP).filter(k => k !== '-' && k !== 'S' && k !== 'U').map(g => 
+                                `<option value="${g}" ${course.grade === g ? 'selected' : ''}>${g}</option>`
+                            ).join('')}
+                        </select>
+                        
+                        <!-- Inline Edit Trigger -->
+                        <button onclick="startEditing('${course.id}')" class="p-2 border-heavy bg-[var(--color-offwhite)] hover:bg-[var(--color-beige)] shadow-heavy active:shadow-none active:translate-y-1">
+                            ✏️
+                        </button>
+                        
+                        <!-- Delete Trigger -->
+                        <button onclick="deleteCourse('${course.id}')" class="p-2 border-heavy bg-[var(--color-pink-dark)] text-black hover:bg-red-400 shadow-heavy active:shadow-none active:translate-y-1">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Course CRUD Actions
+        function addCourse(termId, isFromElectivesTab, isAI = false) {
+            syncOpenStates(); 
+            const suffix = isFromElectivesTab ? `elec-` : '';
+            
+            const codeInput = document.getElementById(`add-${suffix}code-${termId}`);
+            const nameInput = document.getElementById(`add-${suffix}name-${termId}`);
+            const crInput = document.getElementById(`add-${suffix}cr-${termId}`);
+            const catInput = document.getElementById(`add-${suffix}cat-${termId}`);
+
+            const code = codeInput ? (codeInput.value || 'NEW-000') : 'NEW-000';
+            const name = nameInput ? (nameInput.value || 'รายวิชาใหม่') : 'รายวิชาใหม่';
+            const credit = crInput ? (parseInt(crInput.value) || 0) : 3;
+            const category = catInput ? catInput.value : 'free';
+
+            const newCourse = {
+                id: 'c_' + Date.now() + Math.random().toString(36).substr(2, 4),
+                term: termId,
+                code: code,
+                name: name,
+                credit: credit,
+                grade: '-',
+                category: category,
+                isElectiveTab: isFromElectivesTab,
+                isUserAdded: true // CRITICAL: Explicitly marked as purely user-added!
+            };
+
+            appData.courses.push(newCourse);
+            
+            // Set memory of last added course for continuation in Qgrade AI
+            lastActionCourseId = newCourse.id;
+            
+            const logSource = isAI ? 'ผ่าน Qgrade AI' : '';
+            logAction('เพิ่มรายวิชา', `เพิ่มวิชา "${code} ${name}" ใน ${TERMS.find(t => t.id === termId).label} ${logSource}`.trim());
+            updateAndRenderAll();
+        }
+
+        function startEditing(id) {
+            syncOpenStates(); 
+            editingCourseId = id;
+            updateAndRenderAll();
+        }
+
+        function handleFieldInput(id, field, value) {
+            const course = appData.courses.find(c => c.id === id);
+            if (course) {
+                course[field] = field === 'credit' ? parseInt(value) || 0 : value;
+                // Auto-save silently as user types
+                saveData();
+                
+                // Track last edited course for Qgrade contextual followup
+                lastActionCourseId = id;
+            }
+        }
+
+        function finishEditing(id) {
+            syncOpenStates();
+            const course = appData.courses.find(c => c.id === id);
+            if (course) {
+                logAction('แก้ไขรายวิชา', `แก้ไขรายละเอียดวิชาเป็น "${course.code || ''} ${course.name || ''} (${course.credit || 0} หน่วยกิต)"ค่ะ`);
+            }
+            editingCourseId = null;
+            updateAndRenderAll();
+        }
+
+        // Delete Course Logic
+        function deleteCourse(id) {
+            syncOpenStates(); 
+            const course = appData.courses.find(c => c.id === id);
+            if (course) {
+                showCustomConfirm(
+                    'ยืนยันการลบวิชา', 
+                    `คุณแน่ใจว่าต้องการลบรายวิชา "${course.code || ''} ${course.name || ''}" ออกจากโครงสร้างหลักสูตรหรือไม่คะ?`, 
+                    () => {
+                        appData.courses = appData.courses.filter(c => c.id !== id);
+                        logAction('ลบรายวิชา', `ลบวิชา "${course.code || ''} ${course.name || ''}" ออกจากประวัติระบบสำเร็จค่ะ`);
+                        if (lastActionCourseId === id) lastActionCourseId = null;
+                        updateAndRenderAll();
+                    }
+                );
+            }
+        }
+
+        function updateGrade(id, grade) {
+            syncOpenStates();
+            const course = appData.courses.find(c => c.id === id);
+            if (course) {
+                course.grade = grade;
+                updateAndRenderAll();
+            }
+        }
+
+        // Render Checklists Progress
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            
+            // Calculate grand total of earned credits across all categories (excluding F, U and '-')
+            const grandEarned = appData.courses
+                .filter(c => c.grade !== '-' && c.grade !== '' && c.grade !== 'F' && c.grade !== 'U')
+                .reduce((sum, c) => sum + Number(c.credit || 0), 0);
+            const grandReq = 133; // Total required credits for CDTI graduation
+            const grandPercent = Math.min(100, (grandEarned / grandReq) * 100);
+
+            // Grand Total Credits Card Header
+            let html = `
+                <div class="card p-6 bg-[var(--color-yellow)] text-black md:col-span-2 mb-2 border-heavy shadow-heavy w-full">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+                        <div>
+                            <h3 class="text-xl font-black italic">สรุปหน่วยกิตรวมสะสมที่ผ่านทั้งหมด (Degree Progress)ค่ะ</h3>
+                            <p class="text-xs font-bold text-gray-700">หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาการออกแบบดิจิทัลและเทคโนโลยี (CDTI)</p>
+                        </div>
+                        <span class="text-2xl font-black mt-2 md:mt-0 bg-[var(--color-offwhite)] text-[var(--color-black)] border-heavy py-1 px-4 shadow-heavy inline-block">${grandEarned} / ${grandReq} หน่วยกิต</span>
+                    </div>
+                    <div class="h-6 border-heavy bg-[var(--color-offwhite)] w-full overflow-hidden mt-3">
+                        <div class="h-full bg-[var(--color-purple)]" style="width: ${grandPercent}%"></div>
+                    </div>
+                    <p class="text-xs font-black text-gray-800 dark:text-zinc-100 mt-2 text-right">สำเร็จแล้ว: ${grandPercent.toFixed(1)}%ค่ะ</p>
+                </div>
+            `;
+            
+            html += CATEGORIES.map(cat => {
+                // Earned credits definition (Exclude F, U and '-')
+                const earned = appData.courses
+                    .filter(c => c.category === cat.id && c.grade !== '-' && c.grade !== '' && c.grade !== 'F' && c.grade !== 'U')
+                    .reduce((sum, c) => sum + Number(c.credit || 0), 0);
+                    
+                const isComplete = earned >= cat.req;
+                const percent = Math.min(100, (earned / cat.req) * 100);
+                
+                return `
+                    <div class="card p-4 ${isComplete ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-500' : 'bg-[var(--color-offwhite)]'}">
+                        <div class="flex justify-between items-end mb-2">
+                            <h3 class="font-bold text-sm ${isComplete ? 'text-emerald-700 dark:text-emerald-400' : 'text-[var(--color-black)]'}">
+                                ${isComplete ? '✅ ' : '⏳ '}${cat.name}
+                            </h3>
+                            <span class="text-xs font-black">${earned} / ${cat.req} cr.</span>
+                        </div>
+                        <div class="h-4 border-heavy bg-[var(--color-offwhite)] w-full">
+                            <div class="h-full transition-all duration-500 ${isComplete ? 'bg-emerald-500' : 'bg-[var(--color-purple)]'}" 
+                                 style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Render Audit log Table
+        function renderAuditLog() {
+            const tbody = document.getElementById('audit-log-body');
+            if (appData.logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center font-bold text-[var(--color-mute-text)] bg-[var(--color-offwhite)]">ไม่มีข้อมูลบันทึกประวัติการแก้ไขค่ะ</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = appData.logs.map((log) => {
+                let badgeClass = 'bg-[var(--color-offwhite)] text-[var(--color-black)] border-2 border-[var(--color-black)]';
+                if (log.action.includes('เพิ่ม')) badgeClass = 'bg-[#F7DCAD] dark:bg-[#4A3E25] text-[var(--color-black)] border-2 border-[var(--color-black)]';
+                else if (log.action.includes('ลบ')) badgeClass = 'bg-[var(--color-pink-dark)] text-black border-2 border-[var(--color-black)]';
+                else if (log.action.includes('แก้ไข')) badgeClass = 'bg-[var(--color-purple)] text-white border-2 border-[var(--color-black)]';
+
+                return `
+                    <tr class="border-b-[2px] border-[var(--color-black)] hover:bg-[var(--color-focus-bg)] transition-colors">
+                        <td class="p-3 border-r-[2px] border-[var(--color-black)] font-black text-xs">${log.timestamp}</td>
+                        <td class="p-3 border-r-[2px] border-[var(--color-black)]">
+                            <span class="px-2 py-0.5 rounded text-xs font-black inline-block ${badgeClass}">${log.action}</span>
+                        </td>
+                        <td class="p-3 font-bold text-xs">${log.details}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function logAction(action, details) {
+            // Only record Add, Delete, and Info Edit actions. Skip grade changes per user instruction.
+            if (action !== 'เพิ่มรายวิชา' && action !== 'ลบรายวิชา' && action !== 'แก้ไขรายวิชา' && action !== 'แก้ไขข้อมูลนักศึกษา' && action !== 'ระบบเริ่มต้น') {
+                return;
+            }
+            
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            const logEntry = {
+                timestamp: `${dateStr} | ${timeStr}`,
+                action: action,
+                details: details
+            };
+
+            appData.logs.unshift(logEntry); 
+            saveData();
+        }
+
+        function clearAuditLog() {
+            showCustomConfirm('ล้างประวัติการใช้งาน', 'คุณต้องการยืนยันการลบประวัติกิจกรรมในระบบทั้งหมดใช่หรือไม่คะ?', () => {
+                appData.logs = [];
+                logAction('ล้างประวัติ', 'ลบประวัติประเมินกิจกรรมระบบเรียบร้อยค่ะ');
+                updateAndRenderAll();
+            });
+        }
+
+        // Profile Management Functions
+        function startEditProfile() {
+            document.getElementById('profile-display').classList.add('hidden');
+            document.getElementById('profile-edit').classList.remove('hidden');
+            document.getElementById('profile-edit').classList.add('flex');
+            document.getElementById('input-name').value = appData.profile.name;
+            document.getElementById('input-id').value = appData.profile.studentId;
+            
+            setTimeout(() => {
+                document.getElementById('input-name').select();
+            }, 50);
+        }
+
+        function saveProfile(event) {
+            event.stopPropagation();
+            const newName = document.getElementById('input-name').value || 'ไม่ระบุชื่อ';
+            const newId = document.getElementById('input-id').value || 'ไม่ระบุรหัส';
+            
+            appData.profile.name = newName;
+            appData.profile.studentId = newId;
+            
+            renderProfile();
+            logAction('แก้ไขข้อมูลนักศึกษา', `เปลี่ยนชื่อข้อมูลเป็น "${newName}" (${newId}) ค่ะ`);
+            saveData();
+            
+            document.getElementById('profile-display').classList.remove('hidden');
+            document.getElementById('profile-edit').classList.add('hidden');
+            document.getElementById('profile-edit').classList.remove('flex');
+        }
+
+        function renderProfile() {
+            document.getElementById('display-name').innerText = appData.profile.name;
+            document.getElementById('display-id').innerText = `รหัสนักศึกษา: ${appData.profile.studentId}`;
+        }
+
+        // Dynamic tab navigation highlight
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            
+            const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active-tab');
+            }
+        }
+
+        // --- CONTEXTUAL PARAMETER EXTRACTOR ENGINE ---
+        function parseEditInput(text, currentTerm) {
+            const normalized = text.toLowerCase().trim();
+            let code = null;
+            let name = null;
+            let credit = null;
+            let grade = null;
+            let termId = null;
+
+            // 1. Extract Course Code (Pattern xxx-xxxx or xxx xxxx)
+            const codeMatch = text.match(/\b([a-zA-Z0-9]{3})[\-\s]([a-zA-Z0-9]{4})\b/);
+            if (codeMatch) {
+                code = `${codeMatch[1].toUpperCase()}-${codeMatch[2].toUpperCase()}`;
+            }
+
+            // 2. Extract Course Name safely without falling into code keywords
+            const cleanTextForName = text.replace(/รหัสวิชา/gi, 'รหัส').replace(/แก้ไข/gi, 'แก้');
+            const nameMatch = cleanTextForName.match(/วิชา\s*(.*?)(?=\s*(?:ปี|เทอม|หน่วยกิต|เกรด|รหัส|$))/i);
+            if (nameMatch) {
+                name = nameMatch[1].trim();
+            }
+
+            // 3. Extract Year and Term (ปี / เทอม)
+            const yearMatch = text.match(/ปี\s*([1-4])/i);
+            const semMatch = text.match(/เทอม\s*([1-3])/i);
+            
+            // Also look for numeric fallback "x x" or "x-x" in text
+            const numSpaceNum = normalized.match(/(?:ปี|เทอม)?\s*([1-4])\s+([1-3])\s*$/) || normalized.match(/\b([1-4])\s+([1-3])\b/);
+            
+            let targetYear = null;
+            let targetSem = null;
+
+            if (yearMatch) targetYear = yearMatch[1];
+            if (semMatch) targetSem = semMatch[1];
+
+            if (!targetYear && !targetSem && numSpaceNum) {
+                targetYear = numSpaceNum[1];
+                targetSem = numSpaceNum[2];
+            }
+
+            if (targetYear && targetSem) {
+                termId = `Y${targetYear}T${targetSem}`;
+            } else if (targetYear && currentTerm) {
+                const currentSem = currentTerm.charAt(3);
+                termId = `Y${targetYear}T${currentSem}`;
+            } else if (targetSem && currentTerm) {
+                const currentYear = currentTerm.charAt(1);
+                termId = `Y${currentYear}T${targetSem}`;
+            }
+
+            // 4. Extract Credits
+            const creditMatch = text.match(/(?:หน่วยกิต|หน่วย)\s*(\d+)/i) || text.match(/(\d+)\s*(?:หน่วยกิต|หน่วย)/i);
+            if (creditMatch) {
+                credit = parseInt(creditMatch[1]);
+            }
+
+            // 5. Extract Grade
+            const gradeMatch = normalized.match(/(?:เกรด|ได้เกรด|ได้)\s*(a|b\+|b|c\+|c|d\+|d|f|s|u|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1|-)/i);
+            if (gradeMatch) {
+                let parsedGrade = gradeMatch[1].toUpperCase();
+                if (parsedGrade === '4' || parsedGrade === '4.0') grade = 'A';
+                else if (parsedGrade === '3.5') grade = 'B+';
+                else if (parsedGrade === '3' || parsedGrade === '3.0') grade = 'B';
+                else if (parsedGrade === '2.5') grade = 'C+';
+                else if (parsedGrade === '2' || parsedGrade === '2.0') grade = 'C';
+                else if (parsedGrade === '1.5') grade = 'D';
+                else if (parsedGrade === '1' || parsedGrade === '1.0') grade = 'F';
+                else grade = parsedGrade;
+            } else {
+                // Check for isolated grade inputs
+                const isolatedGrade = normalized.match(/^(a|b\+|b|c\+|c|d\+|d|f|s|u|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1|-)$/i);
+                if (isolatedGrade) {
+                    let parsedGrade = isolatedGrade[1].toUpperCase();
+                    if (parsedGrade === '4' || parsedGrade === '4.0') grade = 'A';
+                    else if (parsedGrade === '3.5') grade = 'B+';
+                    else if (parsedGrade === '3' || parsedGrade === '3.0') grade = 'B';
+                    else if (parsedGrade === '2.5') grade = 'C+';
+                    else if (parsedGrade === '2' || parsedGrade === '2.0') grade = 'C';
+                    else if (parsedGrade === '1.5') grade = 'D';
+                    else if (parsedGrade === '1' || parsedGrade === '1.0') grade = 'F';
+                    else grade = parsedGrade;
+                }
+            }
+
+            // 6. Fallback Name: If absolutely no keywords or fields matched, treat everything as the Name
+            if (!code && !name && !credit && !grade && !termId && text.length > 0) {
+                // Ignore commands
+                if (!normalized.includes('แก้') && !normalized.includes('เพิ่ม') && !normalized.includes('ยกเลิก')) {
+                    name = text.trim();
+                }
+            }
+
+            return { code, name, credit, grade, termId };
+        }
+
+        // --- APPLY UPDATES HELPER ---
+        function applyUpdatesToCourse(targetCourse, text) {
+            const updates = parseEditInput(text, targetCourse.term);
+            let updatedFields = [];
+
+            if (updates.code) {
+                const oldCode = targetCourse.code || 'ไม่มีรหัส';
+                targetCourse.code = updates.code;
+                updatedFields.push(`รหัสวิชาจาก "${oldCode}" เป็น "${updates.code}"`);
+            }
+            if (updates.name) {
+                const oldName = targetCourse.name || 'ไม่มีชื่อ';
+                targetCourse.name = updates.name;
+                updatedFields.push(`ชื่อวิชาจาก "${oldName}" เป็น "${updates.name}"`);
+            }
+            if (updates.termId) {
+                const oldTerm = targetCourse.term;
+                targetCourse.term = updates.termId;
+                const oldTermLabel = TERMS.find(t => t.id === oldTerm)?.label || oldTerm;
+                const newTermLabel = TERMS.find(t => t.id === updates.termId)?.label || updates.termId;
+                updatedFields.push(`ภาคเรียนจาก "${oldTermLabel}" เป็น "${newTermLabel}"`);
+            }
+            if (updates.credit !== null && updates.credit !== undefined) {
+                const oldCredit = targetCourse.credit || 0;
+                targetCourse.credit = updates.credit;
+                updatedFields.push(`หน่วยกิตจาก "${oldCredit}" เป็น "${updates.credit}"`);
+            }
+            if (updates.grade) {
+                const oldGrade = targetCourse.grade || '-';
+                targetCourse.grade = updates.grade;
+                updatedFields.push(`เกรดจาก "${oldGrade}" เป็น "${updates.grade}"`);
+            }
+
+            if (updatedFields.length > 0) {
+                logAction('แก้ไขรายวิชา', `แก้ไขรายละเอียดวิชา "${targetCourse.code || ''} ${targetCourse.name || ''}" (${updatedFields.join(', ')}) ผ่าน Qgrade AI ค่ะ`);
+                updateAndRenderAll();
+                
+                let yearVal = targetCourse.term.charAt(1);
+                let semVal = targetCourse.term.charAt(3);
+
+                return `"รหัสวิชา <strong>${targetCourse.code || 'NEW-000'}</strong>" "วิชา <strong>${targetCourse.name || 'ไม่มีชื่อ'}</strong>" ปี <strong>${yearVal}</strong> เทอม <strong>${semVal}</strong> หน่วยกิต <strong>${targetCourse.credit || '0'}</strong> เกรด <strong>${targetCourse.grade || '-'}</strong> ได้บันทึกข้อมูลแล้วเรียบร้อยค่ะ`;
+            }
+            return null;
+        }
+
+        // --- DIRECT GRADE ASSIGNMENT FROM LOOKUP LISTS ---
+        window.selectCourseForDirectGrade = function(courseId) {
+            const course = appData.courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            qgradeState.targetCourseId = courseId;
+            qgradeState.mode = 'awaiting_direct_grade';
+            
+            appendQgradeMessage('user', `เลือกกรอกเกรดวิชา: ${course.name || 'ไม่มีชื่อ'}ค่ะ`, false);
+            
+            // Show beautiful quick grade buttons in the chat message
+            let gradeButtonsHtml = `วิชา "<strong>${course.name || 'ไม่มีชื่อ'}</strong>" ได้เกรดอะไรคะ?<br>คุณสามารถพิมพ์เกรด พิมพ์คำสั่งเสียง หรือกดเลือกจากปุ่มด้านล่างนี้ได้เลยค่ะ:<br><br>`;
+            gradeButtonsHtml += `<div class="grid grid-cols-4 gap-1.5 p-1">`;
+            const grades = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F', 'S', 'U', '-'];
+            grades.forEach(g => {
+                gradeButtonsHtml += `
+                    <button onclick="submitDirectGrade('${courseId}', '${g}')" class="btn btn-purple text-[10px] py-1.5 px-1 border-2 border-[var(--color-black)] hover:bg-opacity-90 active:translate-y-0.5 text-center">
+                        ${g}
+                    </button>
+                `;
+            });
+            gradeButtonsHtml += `</div><br><button onclick="cancelQgradeEdit()" class="btn btn-danger text-[9px] py-1 px-2">❌ ยกเลิกค่ะ</button>`;
+            
+            setTimeout(() => {
+                appendQgradeMessage('bot', gradeButtonsHtml, true);
+            }, 450);
+        }
+
+        window.submitDirectGrade = function(courseId, grade) {
+            const course = appData.courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            course.grade = grade;
+            qgradeState.mode = 'idle';
+            qgradeState.targetCourseId = null;
+            
+            let yearVal = course.term.charAt(1);
+            let semVal = course.term.charAt(3);
+            
+            updateAndRenderAll();
+            
+            appendQgradeMessage('user', `กรอกเกรด ${grade}ค่ะ`, false);
+            setTimeout(() => {
+                appendQgradeMessage('bot', `"รหัสวิชา <strong>${course.code || 'NEW-000'}</strong>" "วิชา <strong>${course.name || 'ไม่มีชื่อ'}</strong>" ปี <strong>${yearVal}</strong> เทอม <strong>${semVal}</strong> หน่วยกิต <strong>${course.credit || '0'}</strong> เกรด <strong>${grade}</strong> ได้บันทึกข้อมูลเรียบร้อยแล้วค่ะ! 🎉`, true);
+            }, 300);
+        }
+
+        // Global interactive functions for Step-by-Step Lookup Flow
+        window.selectLookupCategory = function(category) {
+            qgradeState.lookupCategory = category;
+            qgradeState.mode = 'awaiting_lookup_term';
+            
+            const categoryLabel = category === 'all' ? 'วิชาทั้งหมด' : 'วิชาเลือก';
+            appendQgradeMessage('user', `เลือก: ${categoryLabel}ค่ะ`, false);
+            
+            // Generate term selection buttons (Year 1-4, Term 1-3)
+            let buttonsHtml = `กรุณาเลือก <strong>ปี และ เทอม</strong> ที่ต้องการดูข้อมูลของกลุ่ม <strong>${categoryLabel}</strong> ค่ะ:<br><br>`;
+            buttonsHtml += `<div class="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto p-1 border border-[var(--color-black)] bg-[var(--color-offwhite)]">`;
+            
+            // Filter Term 3 (Summer) for Electives if needed, or list all
+            const termsToRender = category === 'elective' ? ELECTIVE_TERMS : TERMS;
+            termsToRender.forEach(t => {
+                buttonsHtml += `
+                    <button onclick="selectLookupTerm('${t.id}')" class="btn btn-yellow text-[10px] py-1 px-1.5 border-2 border-[var(--color-black)] hover:bg-opacity-90 active:translate-y-0.5 w-full text-center">
+                        ${t.label}
+                    </button>
+                `;
+            });
+            buttonsHtml += `</div><br><button onclick="cancelQgradeEdit()" class="btn btn-danger text-[9px] py-1 px-2">❌ ยกเลิกค่ะ</button>`;
+            
+            setTimeout(() => {
+                appendQgradeMessage('bot', buttonsHtml, true);
+            }, 300);
+        }
+
+        window.selectLookupTerm = function(termId) {
+            const category = qgradeState.lookupCategory || 'all';
+            qgradeState.mode = 'idle';
+            qgradeState.lookupCategory = null;
+            
+            const term = TERMS.find(t => t.id === termId);
+            const label = term ? term.label : termId;
+            const catLabel = category === 'all' ? 'วิชาทั้งหมด' : 'วิชาเลือก';
+            
+            appendQgradeMessage('user', `ดู ${catLabel} ของ ${label}ค่ะ`, false);
+            
+            setTimeout(() => {
+                const response = showSubjectsForLookup(termId, category);
+                appendQgradeMessage('bot', response, true);
+            }, 300);
+        }
+
+        function showSubjectsForLookup(termId, category) {
+            const isElective = (category === 'elective');
+            const filteredCourses = appData.courses.filter(c => c.term === termId && (isElective ? c.isElectiveTab : !c.isElectiveTab));
+            const termLabel = TERMS.find(t => t.id === termId)?.label || termId;
+            const catLabel = isElective ? 'วิชาเลือก' : 'วิชาทั้งหมด';
+
+            if (filteredCourses.length === 0) {
+                return `ไม่พบรายวิชาใดบันทึกในกลุ่ม <strong>${catLabel}</strong> ของ <strong>${termLabel}</strong> เลยค่ะ`;
+            }
+            
+            let responseHtml = `พบวิชาในหัวข้อ <strong>${catLabel}</strong> ของ <strong>${termLabel}</strong> ดังนี้ค่ะ คลิกเลือกวิชาเพื่อกรอกเกรดได้ทันทีเลยนะคะ:<br><br>`;
+            responseHtml += `<div class="flex flex-col gap-2 mt-1">`;
+            filteredCourses.forEach(c => {
+                responseHtml += `
+                    <button onclick="selectCourseForDirectGrade('${c.id}')" class="btn btn-purple text-[10px] py-1.5 px-2.5 text-left w-full border-2 border-[var(--color-black)] hover:bg-opacity-90 active:translate-y-0.5 animate-none flex justify-between items-center">
+                        <span>🏷️ ${c.code || 'NEW-000'} - ${c.name || 'ไม่มีชื่อ'}</span>
+                        <span class="bg-[var(--color-yellow)] text-black px-1.5 rounded font-black text-[9px]">เกรด: ${c.grade || '-'}</span>
+                    </button>
+                `;
+            });
+            responseHtml += `</div>`;
+            return responseHtml;
+        }
+
+        // --- QGRADE AI CHAT LOGIC ---
+        function toggleQgrade() {
+            const chat = document.getElementById('qgrade-chat');
+            chat.classList.toggle('hidden');
+            if (!chat.classList.contains('hidden')) {
+                document.getElementById('qgrade-input').focus();
+                const msgContainer = document.getElementById('qgrade-messages');
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }
+        }
+
+        function appendQgradeMessage(sender, text, isBot = false, replyToText = null) {
+            const msgContainer = document.getElementById('qgrade-messages');
+            const rowDiv = document.createElement('div');
+            
+            let replyHeaderHtml = '';
+            if (replyToText) {
+                replyHeaderHtml = `<div class="bg-gray-200/70 dark:bg-zinc-800 border-l-2 border-[var(--color-black)] p-1 text-[9px] mb-1 italic text-[var(--color-mute-text)] truncate font-semibold">ตอบกลับ: "${replyToText}"</div>`;
+            }
+
+            if (isBot) {
+                rowDiv.className = "flex items-start gap-1 max-w-[90%] self-start mr-auto w-full";
+                const msgId = 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4);
+                rowDiv.innerHTML = `
+                    <div id="${msgId}-bubble" class="bg-[var(--color-offwhite)] border-2 border-[var(--color-black)] p-2 rounded-br-lg shadow-[2px_2px_0px_var(--color-black)] flex-1 text-xs">
+                        ${replyHeaderHtml}
+                        <p class="font-bold text-[var(--color-purple)] flex items-center gap-1.5">
+                            Qgrade Assistant 
+                            <span class="font-black text-[10px] leading-none inline-flex items-start select-none bg-[var(--color-yellow)] text-black border border-[var(--color-black)] px-0.5 rounded shadow-[1px_1px_0px_rgba(0,0,0,1)]">
+                                Q<span class="text-[5px] font-black text-[var(--color-purple)] -mt-0.5 ml-0.2 lowercase">ai</span>
+                            </span>
+                        </p>
+                        <div class="mt-1 text-[var(--color-black)] font-semibold content-body">${text}</div>
+                    </div>
+                    <button onclick="setReplyTarget('${msgId}')" class="p-1 hover:bg-gray-200 dark:hover:bg-zinc-800 border border-transparent hover:border-[var(--color-black)] transition text-[12px] flex items-center justify-center self-center" title="ตอบกลับข้อความนี้">
+                        ↩️
+                    </button>
+                `;
+            } else {
+                rowDiv.className = "flex items-start gap-1 max-w-[90%] self-end ml-auto text-right w-full justify-end";
+                rowDiv.innerHTML = `
+                    <div class="bg-[var(--color-yellow)] border-2 border-[var(--color-black)] p-2 rounded-bl-lg shadow-[2px_2px_0px_var(--color-black)] text-left flex-1 text-xs">
+                        ${replyHeaderHtml}
+                        <p class="font-bold text-black text-right">คุณ</p>
+                        <p class="mt-1 text-black font-semibold">${text}</p>
+                    </div>
+                `;
+            }
+            
+            msgContainer.appendChild(rowDiv);
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+        }
+
+        // Reply Management State functions
+        function setReplyTarget(msgId) {
+            const bubble = document.getElementById(`${msgId}-bubble`);
+            if (bubble) {
+                const contentEl = bubble.querySelector('.content-body');
+                let text = contentEl ? contentEl.innerText : bubble.innerText;
+                
+                // Clean layout mentions
+                text = text.replace('Qgrade Assistant 🤖', '').replace(/[\r\n]+/g, ' ').trim();
+                if (text.length > 40) text = text.substring(0, 40) + '...';
+                
+                activeReplyMsg = { id: msgId, text: text };
+                
+                const preview = document.getElementById('reply-preview-bar');
+                const textEl = document.getElementById('reply-preview-text');
+                preview.classList.remove('hidden');
+                preview.classList.add('flex');
+                textEl.innerText = `ตอบกลับ: "${text}"`;
+                
+                document.getElementById('qgrade-input').focus();
+            }
+        }
+
+        function cancelReply() {
+            activeReplyMsg = null;
+            const preview = document.getElementById('reply-preview-bar');
+            preview.classList.remove('flex');
+            preview.classList.add('hidden');
+        }
+
+        function sendQgradeMessage() {
+            const input = document.getElementById('qgrade-input');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            // Record Reply reference text if active
+            const refText = activeReplyMsg ? activeReplyMsg.text : null;
+            const refMsg = activeReplyMsg; // Save original object before clearing
+            
+            appendQgradeMessage('user', text, false, refText);
+            input.value = '';
+            
+            // Close replying preview immediately
+            cancelReply();
+            
+            setTimeout(() => {
+                const response = parseQgradeCommand(text, refMsg);
+                appendQgradeMessage('bot', response, true, text);
+            }, 600);
+        }
+
+        // Helper: Find course from referenced message text with safety checks
+        function findCourseFromText(txt) {
+            if (!txt) return null;
+            const normalized = txt.toLowerCase();
+            // Try matching course code first
+            for (let c of appData.courses) {
+                if (c.code && normalized.includes(c.code.toLowerCase())) {
+                    return c;
+                }
+            }
+            // Try matching course name
+            for (let c of appData.courses) {
+                if (c.name && normalized.includes(c.name.toLowerCase())) {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+        // Helper: Get user added or custom courses (Strict Filter: ONLY user-added flagged courses!)
+        function getUserAddedCourses() {
+            return appData.courses.filter(c => c.isUserAdded === true);
+        }
+
+        window.selectCourseForQgrade = function(courseId) {
+            const course = appData.courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            qgradeState.targetCourseId = courseId;
+            qgradeState.mode = 'awaiting_edit_type';
+            
+            appendQgradeMessage('user', `เลือกแก้ไขวิชา: ${course.name || 'ไม่มีชื่อ'}ค่ะ`, false);
+            
+            let yearLabel = course.term.charAt(1);
+            let semLabel = course.term.charAt(3);
+
+            setTimeout(() => {
+                appendQgradeMessage('bot', `รหัสวิชา <strong>${course.code || '-'}</strong> วิชา <strong>${course.name || '-'}</strong> ปี <strong>${yearLabel}</strong> เทอม <strong>${semLabel}</strong> หน่วยกิต <strong>${course.credit || '0'}</strong> เกรด <strong>${course.grade || '-'}</strong> ค่ะ<br><br>ต้องการแก้ไขอะไรดีคะ? <br>คุณสามารถพิมพ์หรือพูดบอกเป็นรายการเดียว หรือพิมพ์รายละเอียดแบบรวมกลุ่มจัดสรรเพื่อทำการอัปเกรดข้อมูลรวบยอดได้ทันทีค่ะ เช่น:<br>• <strong>"เกรด A"</strong><br>• <strong>"หน่วยกิต 3"</strong><br>• <strong>"รหัส 321-1234"</strong><br>• <strong>"รหัสวิชา 321-1555 วิชา ถ่ายรูปสวยงาม ปี 3 เทอม 2 หน่วยกิต 3 เกรด A"</strong><br><br><button onclick="cancelQgradeEdit()" class="btn btn-danger text-[9px] py-0.5 px-2 mt-1">❌ ยกเลิกการแก้ไขค่ะ</button>`, true);
+            }, 450);
+        }
+
+        window.cancelQgradeEdit = function() {
+            qgradeState.mode = 'idle';
+            qgradeState.targetCourseId = null;
+            qgradeState.pendingCourse = null;
+            appendQgradeMessage('user', 'ยกเลิกค่ะ', false);
+            setTimeout(() => {
+                appendQgradeMessage('bot', 'ยกเลิกการแก้ไขวิชาเรียบร้อยแล้วค่ะ มีอะไรอื่นต้องการให้ฉันช่วยอีกไหมคะ? 😊', true);
+            }, 400);
+        }
+
+        function askNextPendingQuestion() {
+            if (!qgradeState.pendingCourse) return "ไม่มีข้อมูลวิชาที่อยู่ระหว่างการดำเนินการค่ะ";
+
+            const p = qgradeState.pendingCourse;
+
+            // 1. Year & Term
+            if (!p.term) {
+                qgradeState.mode = 'awaiting_term_for_add';
+                return `วิชา "<strong>${p.name}</strong>" อยู่ ปีไหน และ เทอมไหน คะ? (หากไม่ทราบให้ระบุ -)`;
+            }
+
+            const yearLabel = p.term.charAt(1);
+            const semLabel = p.term.charAt(3);
+
+            // 2. Course Code
+            if (!p.code) {
+                qgradeState.mode = 'awaiting_code_for_add';
+                return `วิชา "<strong>${p.name}</strong>" "ปี <strong>${yearLabel}</strong> เทอม <strong>${semLabel}</strong>" รหัสวิชาอะไรคะ? (หากไม่ทราบให้ระบุ -)`;
+            }
+
+            // 3. Credits
+            if (p.credit === null || p.credit === undefined) {
+                qgradeState.mode = 'awaiting_credit_for_add';
+                return `"รหัสวิชา <strong>${p.code}</strong>" "วิชา <strong>${p.name}</strong>" "ปี <strong>${yearLabel}</strong> เทอม <strong>${semLabel}</strong>" หน่วยกิตอะไรคะ? (หากไม่ทราบให้ระบุ -)`;
+            }
+
+            // 4. Grade
+            if (!p.grade) {
+                qgradeState.mode = 'awaiting_grade_for_add';
+                return `"รหัสวิชา <strong>${p.code}</strong>" "วิชา <strong>${p.name}</strong>" "ปี <strong>${yearLabel}</strong> เทอม <strong>${semLabel}</strong>" "หน่วยกิต <strong>${p.credit}</strong>" ได้เกรดอะไรคะ? (หากไม่ทราบให้ระบุ -)`;
+            }
+
+            // All attributes met: Commit to database!
+            const finalCourse = {
+                id: 'c_ai_' + Date.now() + Math.random().toString(36).substr(2, 4),
+                term: p.term,
+                code: p.code === '-' ? 'NEW-000' : p.code,
+                name: p.name,
+                credit: p.credit === '-' ? 0 : Number(p.credit),
+                grade: p.grade,
+                category: p.category || 'free',
+                isElectiveTab: true,
+                isUserAdded: true
+            };
+
+            appData.courses.push(finalCourse);
+            lastActionCourseId = finalCourse.id;
+
+            logAction('เพิ่มรายวิชา', `เพิ่มวิชา "${finalCourse.code} ${finalCourse.name}" ผ่าน Qgrade AI ใน ${TERMS.find(t => t.id === finalCourse.term)?.label || finalCourse.term} ค่ะ`);
+            updateAndRenderAll();
+
+            // Clear state
+            qgradeState.mode = 'idle';
+            qgradeState.pendingCourse = null;
+
+            return `"รหัสวิชา <strong>${finalCourse.code}</strong>" "วิชา <strong>${finalCourse.name}</strong>" ปี <strong>${yearLabel}</strong> เทอม <strong>${semLabel}</strong> หน่วยกิต <strong>${finalCourse.credit}</strong> เกรด <strong>${finalCourse.grade}</strong> ได้บันทึกข้อมูลแล้วเรียบร้อยค่ะ`;
+        }
+
+        function parseQgradeCommand(text, refMsg) {
+            const normalized = text.toLowerCase().trim();
+            
+            // --- CANCEL ACTION FOR ANY MODES ---
+            if (normalized === 'ยกเลิก' || normalized === 'cancel') {
+                qgradeState.mode = 'idle';
+                qgradeState.targetCourseId = null;
+                qgradeState.pendingCourse = null;
+                qgradeState.lookupCategory = null;
+                return "ยกเลิกการทำรายการเรียบร้อยแล้วค่ะ มีอะไรให้ฉันช่วยอีกไหมคะ? 😊";
+            }
+
+            // --- STEP-BY-STEP CONVERSATIONAL FLOW HANDLERS ---
+            if (qgradeState.mode === 'awaiting_lookup_category') {
+                if (normalized.includes('ทั้งหมด')) {
+                    setTimeout(() => { window.selectLookupCategory('all'); }, 50);
+                    return "กำลังดำเนินการต่อในหมวดวิชาทั้งหมดค่ะ...";
+                } else if (normalized.includes('เลือก')) {
+                    setTimeout(() => { window.selectLookupCategory('elective'); }, 50);
+                    return "กำลังดำเนินการต่อในหมวดวิชาเลือกค่ะ...";
+                }
+            }
+
+            if (qgradeState.mode === 'awaiting_lookup_term') {
+                const termMatch = normalized.match(/(?:ปี|y)?\s*([1-4])\s*(?:เทอม|t)?\s*([1-3])/i);
+                if (termMatch) {
+                    const termId = `Y${termMatch[1]}T${termMatch[2]}`;
+                    setTimeout(() => { window.selectLookupTerm(termId); }, 50);
+                    return "กำลังสแกนภาคเรียนที่คุณเลือกค่ะ...";
+                }
+            }
+
+            if (qgradeState.pendingCourse) {
+                const p = qgradeState.pendingCourse;
+
+                // A. Awaiting Year & Term
+                if (qgradeState.mode === 'awaiting_term_for_add') {
+                    if (normalized === '-') {
+                        p.term = 'Y1T1'; // Fallback
+                    } else {
+                        // Check for shorthand digit pattern e.g. "3 2" or "2 1"
+                        const numSpaceNum = normalized.match(/^\s*([1-4])\s+([1-3])\s*$/);
+                        const yearMatch = normalized.match(/(?:ปี|y)\s*([1-4])/i);
+                        const semMatch = normalized.match(/(?:เทอม|t)\s*([1-3])/i);
+
+                        if (numSpaceNum) {
+                            p.term = `Y${numSpaceNum[1]}T${numSpaceNum[2]}`;
+                        } else if (yearMatch && semMatch) {
+                            p.term = `Y${yearMatch[1]}T${semMatch[1]}`;
+                        } else {
+                            return `ขออภัยค่ะ ฉันยังไม่พบข้อมูลปีและเทอมที่ชัดเจน กรุณาระบุ เช่น <strong>"ปี 3 เทอม 2"</strong> หรือป้อนตัวเลขย่อคู่กันอย่าง <strong>"3 2"</strong> นะคะ (หากไม่ทราบให้ระบุ -)`;
+                        }
+                    }
+                    return askNextPendingQuestion();
+                }
+
+                // B. Awaiting Course Code
+                if (qgradeState.mode === 'awaiting_code_for_add') {
+                    if (normalized === '-') {
+                        p.code = '-';
+                    } else {
+                        const codeRegex = /([a-zA-Z0-9]{2,4})[\-\s]([a-zA-Z0-9]{3,5})/;
+                        const match = normalized.match(codeRegex);
+                        if (match) {
+                            p.code = `${match[1].toUpperCase()}-${match[2].toUpperCase()}`;
+                        } else {
+                            p.code = normalized.toUpperCase(); // Fallback raw text
+                        }
+                    }
+                    return askNextPendingQuestion();
+                }
+
+                // C. Awaiting Credits
+                if (qgradeState.mode === 'awaiting_credit_for_add') {
+                    if (normalized === '-') {
+                        p.credit = '-';
+                    } else {
+                        const numMatch = normalized.match(/(\d+)/);
+                        if (numMatch) {
+                            p.credit = parseInt(numMatch[1]);
+                        } else {
+                            return `กรุณาระบุจำนวนหน่วยกิตเป็นตัวเลข หรือระบุเครื่องหมาย <strong>"-"</strong> หากไม่ทราบนะคะ (หากไม่ทราบให้ระบุ -)`;
+                        }
+                    }
+                    return askNextPendingQuestion();
+                }
+
+                // D. Awaiting Grade
+                if (qgradeState.mode === 'awaiting_grade_for_add') {
+                    if (normalized === '-') {
+                        p.grade = '-';
+                    } else {
+                        const gradeMatch = normalized.match(/(?:เกรด\s*)?(a|b\+|b|c\+|c|d\+|d|f|s|u|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1)/i);
+                        if (gradeMatch) {
+                            let parsedGrade = gradeMatch[1].toUpperCase();
+                            if (parsedGrade === '4' || parsedGrade === '4.0') parsedGrade = 'A';
+                            else if (parsedGrade === '3.5') parsedGrade = 'B+';
+                            else if (parsedGrade === '3' || parsedGrade === '3.0') parsedGrade = 'B';
+                            else if (parsedGrade === '2.5') parsedGrade = 'C+';
+                            else if (parsedGrade === '2' || parsedGrade === '2.0') parsedGrade = 'C';
+                            else if (parsedGrade === '1.5') parsedGrade = 'D';
+                            else if (parsedGrade === '1' || parsedGrade === '1.0') parsedGrade = 'F';
+
+                            p.grade = parsedGrade;
+                        } else {
+                            return `กรุณาระบุเกรดที่ถูกต้อง (เช่น A, B+, C, S, U) หรือระบุเครื่องหมาย <strong>"-"</strong> หากไม่ทราบนะคะ (หากไม่ทราบให้ระบุ -)`;
+                        }
+                    }
+                    return askNextPendingQuestion();
+                }
+            }
+
+            // --- PRIORITY DIRECT GRADE BINDING FOR LOOKUP CHANNELS ---
+            if (qgradeState.mode === 'awaiting_direct_grade' && qgradeState.targetCourseId) {
+                const targetCourse = appData.courses.find(c => c.id === qgradeState.targetCourseId);
+                if (targetCourse) {
+                    let parsedGrade = null;
+                    if (normalized === 's' || normalized === 'ผ่าน') {
+                        parsedGrade = 'S';
+                    } else if (normalized === 'u' || normalized === 'ไม่ผ่าน') {
+                        parsedGrade = 'U';
+                    } else if (normalized === '-') {
+                        parsedGrade = '-';
+                    } else {
+                        const gradeMatch = normalized.match(/(?:เกรด\s*)?(a|b\+|b|c\+|c|d\+|d|f|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1)/i);
+                        if (gradeMatch) {
+                            parsedGrade = gradeMatch[1].toUpperCase();
+                            if (parsedGrade === '4' || parsedGrade === '4.0') parsedGrade = 'A';
+                            else if (parsedGrade === '3.5') parsedGrade = 'B+';
+                            else if (parsedGrade === '3' || parsedGrade === '3.0') parsedGrade = 'B';
+                            else if (parsedGrade === '2.5') parsedGrade = 'C+';
+                            else if (parsedGrade === '2' || parsedGrade === '2.0') parsedGrade = 'C';
+                            else if (parsedGrade === '1.5') parsedGrade = 'D';
+                            else if (parsedGrade === '1' || parsedGrade === '1.0') parsedGrade = 'F';
+                        }
+                    }
+
+                    if (parsedGrade) {
+                        targetCourse.grade = parsedGrade;
+                        let yearVal = targetCourse.term.charAt(1);
+                        let semVal = targetCourse.term.charAt(3);
+                        
+                        qgradeState.mode = 'idle';
+                        qgradeState.targetCourseId = null;
+                        updateAndRenderAll();
+                        
+                        return `"รหัสวิชา <strong>${targetCourse.code || 'NEW-000'}</strong>" "วิชา <strong>${targetCourse.name || 'ไม่มีชื่อ'}</strong>" ปี <strong>${yearVal}</strong> เทอม <strong>${semVal}</strong> หน่วยกิต <strong>${targetCourse.credit || '0'}</strong> เกรด <strong>${parsedGrade}</strong> ได้บันทึกข้อมูลแล้วเรียบร้อยค่ะ`;
+                    } else {
+                        return `ขออภัยค่ะ ฉันไม่เข้าใจเกรดที่คุณระบุ กรุณากรอกเกรดใหม่อีกครั้งนะคะ (เช่น A, B+, S, U หรือ -ค่ะ)`;
+                    }
+                }
+            }
+
+            // --- PRIORITY 1: ACTIVE EDIT MODE DISPATCHER ---
+            if (qgradeState.mode === 'awaiting_edit_type' && qgradeState.targetCourseId) {
+                const targetCourse = appData.courses.find(c => c.id === qgradeState.targetCourseId);
+                if (targetCourse) {
+                    const response = applyUpdatesToCourse(targetCourse, text);
+                    if (response) {
+                        qgradeState.mode = 'idle';
+                        qgradeState.targetCourseId = null;
+                        return response;
+                    } else {
+                        return `ขออภัยค่ะ ฉันยังไม่เข้าใจรูปแบบการแก้ไขที่คุณระบุ กรุณาลองพิมพ์บอกอีกครั้ง เช่น <strong>"เกรด A"</strong>, <strong>"หน่วยกิต 3"</strong> หรือพิมพ์ข้อมูลอัปเดตรวมกันมาได้เลยค่ะ`;
+                    }
+                }
+            }
+
+            // --- PRIORITY 2: REPLY TARGET DISPATCHER ---
+            if (refMsg) {
+                const targetCourse = findCourseFromText(refMsg.text);
+                if (targetCourse) {
+                    const response = applyUpdatesToCourse(targetCourse, text);
+                    if (response) {
+                        return response;
+                    }
+                }
+            }
+
+            // --- DIRECT LOOKUP: "วิชา [เลือก] ปี x เทอม x" ---
+            // Matches: "วิชา ปี 1 เทอม 1", "วิชาเลือก ปี 2 เทอม 1", "เลือก ปี 1 เทอม 2", "วิชา 1 1", "เลือก 3 2"
+            const directLookupMatch = normalized.match(/(วิชาเลือก|วิชา|เลือก)\s*(?:ปี|y)?\s*([1-4])\s*(?:เทอม|t)?\s*([1-3])/i);
+            if (directLookupMatch) {
+                const commandType = directLookupMatch[1];
+                const yearNum = directLookupMatch[2];
+                const termNum = directLookupMatch[3];
+                const termId = `Y${yearNum}T${termNum}`;
+                const category = commandType.includes('เลือก') ? 'elective' : 'all';
+                
+                return showSubjectsForLookup(termId, category);
+            }
+
+            // --- DIRECT MATCH: "วิชา" by itself or "วิชา Qgrade" ---
+            if (normalized === 'วิชา' || normalized === 'วิชา qgrade' || normalized === 'ดูวิชา') {
+                qgradeState.mode = 'awaiting_lookup_category';
+                let responseHtml = `ต้องการดูข้อมูลของกลุ่มวิชาใดคะ?<br><br>`;
+                responseHtml += `
+                    <div class="flex flex-col gap-2">
+                        <button onclick="selectLookupCategory('all')" class="btn btn-purple text-xs py-2 px-4 border-2 border-[var(--color-black)] w-full text-left flex justify-between items-center">
+                            <span>📚 วิชาทั้งหมด (หลักสูตรบังคับ/แกน)</span>
+                            <span>➡️</span>
+                        </button>
+                        <button onclick="selectLookupCategory('elective')" class="btn btn-yellow text-xs py-2 px-4 border-2 border-[var(--color-black)] w-full text-left flex justify-between items-center text-black">
+                            <span>✨ วิชาเลือก (หมวดเลือกเสรี/วิชาชีพเลือก)</span>
+                            <span>➡️</span>
+                        </button>
+                    </div>
+                `;
+                return responseHtml;
+            }
+
+            // --- HISTORICAL SEARCHES (Fallback lookup) ---
+            const isLookup = normalized.includes('เช็ค') || normalized.includes('ดู');
+            if (isLookup) {
+                let targetYear = null;
+                let targetSem = null;
+                
+                const yearMatch = normalized.match(/(?:ปี|y)\s*([1-4])/i);
+                const semMatch = normalized.match(/(?:เทอม|t)\s*([1-3])/i);
+                
+                // Fallback shorthand check e.g. "ดูวิชาเลือก 3 2" or "เช็ค 1 1"
+                const shorthandMatch = normalized.match(/(?:เช็ค|ดู)\s*(?:วิชาเลือก|เลือก)?\s*([1-4])\s+([1-3])/);
+                
+                if (yearMatch) targetYear = yearMatch[1];
+                if (semMatch) targetSem = semMatch[1];
+                if (!targetYear && !targetSem && shorthandMatch) {
+                    targetYear = shorthandMatch[1];
+                    targetSem = shorthandMatch[2];
+                }
+                
+                if (targetYear && targetSem) {
+                    const termId = `Y${targetYear}T${targetSem}`;
+                    const isElectiveQuery = normalized.includes('วิชาเลือก') || normalized.includes('เลือก');
+                    return showSubjectsForLookup(termId, isElectiveQuery ? 'elective' : 'all');
+                }
+            }
+
+            // --- PRIORITY 3: INITIATE EDIT STATE ---
+            const isEditInstruction = normalized.includes('แก้') || normalized.includes('แก้ไข');
+            if (isEditInstruction) {
+                const added = getUserAddedCourses();
+                if (added.length === 0) {
+                    return `ไม่พบวิชาที่คุณแก้ไขหรือลงทะเบียนเพิ่มเติมไว้ล่าสุดเลยค่ะ คุณสามารถทดลองพูดหรือพิมพ์เพิ่มวิชาก่อน เช่น "เพิ่มวิชา 321-1555 ถ่ายรูปสวยงาม ของปี 3 เทอม 2" นะคะ`;
+                }
+                
+                let responseHtml = `พบวิชาเรียนที่คุณเพิ่มหรือบันทึกไว้ในฐานข้อมูลล่าสุด กรุณาเลือกคลิกวิชาที่ต้องการปรับปรุงค่ะ:<br><br>`;
+                responseHtml += `<div class="flex flex-col gap-2 mt-1">`;
+                added.slice(0, 5).forEach(c => {
+                    responseHtml += `
+                        <button onclick="selectCourseForQgrade('${c.id}')" class="btn btn-purple text-[10px] py-1 px-2.5 text-left w-full border-2 border-[var(--color-black)] hover:bg-opacity-90 active:translate-y-0.5 animate-none">
+                            ⚙️ ${c.code || 'NEW'} - ${c.name || 'ไม่มีชื่อ'}
+                        </button>
+                    `;
+                });
+                responseHtml += `</div>`;
+                qgradeState.mode = 'awaiting_selection';
+                return responseHtml;
+            }
+
+            // --- 4. TEST/RANDOMIZER ENGINE ---
+            if (normalized === 'test' || normalized === 'เทส') {
+                const possibleGrades = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F', 'S', 'U'];
+                const getRandomGrade = () => possibleGrades[Math.floor(Math.random() * possibleGrades.length)];
+                appData.courses.forEach(c => {
+                    c.grade = getRandomGrade();
+                });
+                updateAndRenderAll();
+                return `ระบบทำการสุ่มเกรดจำลองให้กับรายวิชาเรียน<strong>ในทุกชั้นปีและทุกภาคเรียนสำเร็จเรียบร้อยทั้งหมดแล้วค่ะ!</strong> 🎲✨`;
+            }
+
+            if (normalized.includes('เทส ปี') || normalized.includes('test ปี') || normalized.includes('test y') || normalized.includes('เทส y')) {
+                const yearMatch = normalized.match(/(?:ปี|y)\s*([1-4])/);
+                if (yearMatch) {
+                    const yearNum = yearMatch[1];
+                    const termMatch = normalized.match(/(?:เทอม|t)\s*([1-3])/);
+                    
+                    const possibleGrades = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F', 'S', 'U'];
+                    const getRandomGrade = () => possibleGrades[Math.floor(Math.random() * possibleGrades.length)];
+                    
+                    if (termMatch) {
+                        const termNum = termMatch[1];
+                        const targetTermId = `Y${yearNum}T${termNum}`;
+                        const targetTermLabel = TERMS.find(t => t.id === targetTermId)?.label || targetTermId;
+                        
+                        const targetCourses = appData.courses.filter(c => c.term === targetTermId);
+                        if (targetCourses.length > 0) {
+                            targetCourses.forEach(c => {
+                                c.grade = getRandomGrade();
+                            });
+                            updateAndRenderAll();
+                            return `ทำการสุ่มจำลองเกรดให้กับวิชาเรียนทั้งหมดในกลุ่ม <strong>${targetTermLabel}</strong> เรียบร้อยแล้วค่ะ! 🎲`;
+                        } else {
+                            return `ไม่พบรายวิชาใดลงทะเบียนใน <strong>${targetTermLabel}</strong> เลยค่ะ ลองตรวจสอบใหม่อีกครั้งค่ะ`;
+                        }
+                    } else {
+                        appData.courses.forEach(c => {
+                            c.grade = getRandomGrade();
+                        });
+                        updateAndRenderAll();
+                        return `ระบบทำการสุ่มเกรดจำลองให้กับรายวิชาเรียน<strong>ในทุกชั้นปีและทุกภาคเรียนสำเร็จเรียบร้อยทั้งหมดแล้วค่ะ!</strong> 🎲✨`;
+                    }
+                }
+            }
+            
+            // --- CONTEXTUAL MEMORY CONTINUATION logic ---
+            const pureGradeRegex = /^(เกรด\s*|ได้เกรด\s*)?(a|b\+|b|c\+|c|d\+|d|f|s|u|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1|-)$/i;
+            const matchPureGrade = normalized.match(pureGradeRegex);
+            
+            if (matchPureGrade && lastActionCourseId) {
+                const targetCourse = appData.courses.find(c => c.id === lastActionCourseId);
+                if (targetCourse) {
+                    let requestedGrade = matchPureGrade[2].toUpperCase();
+                    
+                    // Convert numeric inputs to letter grades based on scale
+                    if (requestedGrade === '4' || requestedGrade === '4.0') requestedGrade = 'A';
+                    else if (requestedGrade === '3.5') requestedGrade = 'B+';
+                    else if (requestedGrade === '3' || requestedGrade === '3.0') requestedGrade = 'B';
+                    else if (requestedGrade === '2.5') requestedGrade = 'C+';
+                    else if (requestedGrade === '2' || requestedGrade === '2.0') requestedGrade = 'C';
+                    else if (requestedGrade === '1.5') requestedGrade = 'D';
+                    else if (requestedGrade === '1' || requestedGrade === '1.0') requestedGrade = 'F';
+                    
+                    targetCourse.grade = requestedGrade;
+                    updateAndRenderAll();
+                    
+                    return `ฉันเก็บบริบทต่อเนื่องจากวิชาล่าสุดแล้วค่ะ! ทำการใส่เกรดให้กับวิชา <strong>${targetCourse.name || ''} (${targetCourse.code || ''})</strong> เป็นเกรด <strong>"${requestedGrade}"</strong> ให้ทันทีค่ะ 🎓`;
+                }
+            }
+
+            // --- 5. GENERAL GRADE UPDATE INTENT ---
+            const gradeRegex = /(?:ได้เกรด|เกรด|ได้|คะแนน)\s*(a|b\+|b|c\+|c|d\+|d|f|s|u|-|ผ่าน|ไม่ผ่าน|ยังไม่เรียน|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1)/i;
+            const matchGrade = normalized.match(gradeRegex);
+            
+            if (matchGrade) {
+                let extractedGrade = matchGrade[1].toUpperCase();
+                if (extractedGrade === 'ผ่าน') extractedGrade = 'S';
+                if (extractedGrade === 'ไม่ผ่าน') extractedGrade = 'U';
+                if (extractedGrade === 'ยังไม่เรียน') extractedGrade = '-';
+                
+                // Convert numerical
+                if (extractedGrade === '4' || extractedGrade === '4.0') extractedGrade = 'A';
+                else if (extractedGrade === '3.5') extractedGrade = 'B+';
+                else if (extractedGrade === '3' || extractedGrade === '3.0') extractedGrade = 'B';
+                else if (extractedGrade === '2.5') extractedGrade = 'C+';
+                else if (extractedGrade === '2' || extractedGrade === '2.0') extractedGrade = 'C';
+                else if (extractedGrade === '1.5') extractedGrade = 'D';
+                else if (extractedGrade === '1' || extractedGrade === '1.0') extractedGrade = 'F';
+
+                // Extract course reference before the grade keyword
+                let courseRef = normalized.split(matchGrade[0])[0].replace(/(วิชา|ปรับเกรด|เปลี่ยนเกรด|รหัส)/gi, '').trim();
+                if (!courseRef && normalized.includes('ได้')) {
+                    courseRef = normalized.split('ได้')[0].replace(/(วิชา|ปรับเกรด|เปลี่ยนเกรด|รหัส)/gi, '').trim();
+                }
+                
+                if (courseRef) {
+                    let foundCourse = appData.courses.find(c => c.code && c.code.toLowerCase() === courseRef);
+                    if (!foundCourse) {
+                        foundCourse = appData.courses.find(c => c.name && (c.name.toLowerCase().includes(courseRef) || courseRef.includes(c.name.toLowerCase())));
+                    }
+                    
+                    if (foundCourse) {
+                        const oldGrade = foundCourse.grade || '-';
+                        foundCourse.grade = extractedGrade;
+                        lastActionCourseId = foundCourse.id; // Save context
+                        updateAndRenderAll();
+                        return `เรียบร้อยค่ะ! ฉันทำการอัปเดตเกรดวิชา <strong>${foundCourse.name || ''} (${foundCourse.code || ''})</strong> จาก "${oldGrade}" เป็น "${extractedGrade}" ให้เรียบร้อยแล้วค่ะ 🎉`;
+                    } else {
+                        return `ขออภัยค่ะ ฉันค้นหาคำว่า "${courseRef}" ในระบบแล้วยังไม่พบวิชาใดสอดคล้องเลยค่ะ ลองป้อนรหัสวิชาตรงๆ เช่น "321-1101 ได้เกรด 4"  ค่ะ`;
+                    }
+                }
+            }
+            
+            // --- 6. ADD COURSE INTENT ---
+            if (normalized.includes('เพิ่มวิชา') || normalized.includes('เพิ่ม')) {
+                // Extract Code (Supports both spaces and hyphen)
+                const codeRegex = /\b([a-zA-Z0-9]{3})[\-\s]([a-zA-Z0-9]{4})\b/;
+                const codeMatch = text.match(codeRegex);
+                let code = null;
+                if (codeMatch) {
+                    code = `${codeMatch[1].toUpperCase()}-${codeMatch[2].toUpperCase()}`;
+                } else {
+                    const genericCodeMatch = text.match(/\b\d{3}-\w{4}\b/) || text.match(/\b\d{3}-\d{4}\b/);
+                    if (genericCodeMatch) {
+                        code = genericCodeMatch[0].toUpperCase();
+                    }
+                }
+
+                // Extract Year & Term
+                let termId = null;
+                const yearMatch = text.match(/ปี\s*([1-4])/i);
+                const semMatch = text.match(/เทอม\s*([1-3])/i);
+                if (yearMatch && semMatch) {
+                    termId = `Y${yearMatch[1]}T${semMatch[1]}`;
+                }
+
+                // Extract Grade
+                const gradeSearchRegex = /(?:เกรด|ได้เกรด|ได้)\s*(a|b\+|b|c\+|c|d\+|d|f|s|u|4\.0|4|3\.5|3\.0|3|2\.5|2\.0|2|1\.5|1\.0|1)/i;
+                const gradeMatch = normalized.match(gradeSearchRegex);
+                let grade = null;
+                if (gradeMatch) {
+                    let parsedGrade = gradeMatch[1].toUpperCase();
+                    if (parsedGrade === '4' || parsedGrade === '4.0') grade = 'A';
+                    else if (parsedGrade === '3.5') grade = 'B+';
+                    else if (parsedGrade === '3' || parsedGrade === '3.0') grade = 'B';
+                    else if (parsedGrade === '2.5') grade = 'C+';
+                    else if (parsedGrade === '2' || parsedGrade === '2.0') grade = 'C';
+                    else if (parsedGrade === '1.5') grade = 'D';
+                    else if (parsedGrade === '1' || parsedGrade === '1.0') grade = 'F';
+                    else grade = parsedGrade;
+                }
+
+                // Extract Credits
+                const creditMatch = text.match(/(?:หน่วยกิต\s*|หน่วย\s*|cr\s*|credit\s*)(\d+)/i) || text.match(/(\d+)\s*(?:หน่วยกิต|หน่วย|cr|credit)/i);
+                let credit = null;
+                if (creditMatch) {
+                    credit = parseInt(creditMatch[1]);
+                }
+
+                // Isolate & Extract Course Name
+                let cleanName = text;
+                cleanName = cleanName.replace(/เพิ่มวิชา/gi, '').replace(/เพิ่ม/gi, '');
+                
+                if (codeMatch) {
+                    cleanName = cleanName.replace(codeMatch[0], '');
+                } else {
+                    const genericCodeMatch = text.match(/\b\d{3}-\w{4}\b/) || text.match(/\b\d{3}-\d{4}\b/);
+                    if (genericCodeMatch) {
+                        cleanName = cleanName.replace(genericCodeMatch[0], '');
+                    }
+                }
+                
+                cleanName = cleanName.replace(/ปี\s*[1-4]/gi, '').replace(/เทอม\s*[1-3]/gi, '');
+                
+                if (gradeMatch) {
+                    cleanName = cleanName.replace(new RegExp('(?:เกรด|ได้เกรด|ได้)?\\s*' + gradeMatch[1].replace('+', '\\+'), 'gi'), '');
+                }
+                
+                if (creditMatch) {
+                    cleanName = cleanName.replace(new RegExp('(?:หน่วยกิต|หน่วย|cr|credit)?\\s*' + creditMatch[1], 'gi'), '');
+                    cleanName = cleanName.replace(new RegExp(creditMatch[1] + '\\s*(?:หน่วยกิต|หน่วย|cr|credit)?', 'gi'), '');
+                }
+
+                cleanName = cleanName.replace(/\bของ\b/gi, '');
+                cleanName = cleanName.replace(/[^\w\s\u0E00-\u0E7F]/g, '').trim();
+                
+                if (!cleanName) {
+                    cleanName = 'วิชาใหม่จาก AI';
+                }
+                
+                // Parse categories
+                let category = 'free'; 
+                if (normalized.includes('แกน')) category = 'core';
+                else if (normalized.includes('บังคับ')) category = 'compulsory';
+                else if (normalized.includes('เลือก')) category = 'elective';
+                else if (normalized.includes('ทั่วไป') || normalized.includes('gened') || normalized.includes('ศึกษาทั่วไป')) category = 'gened-group';
+                
+                // Construct temporary pending course details for conversational follow-up
+                qgradeState.pendingCourse = {
+                    name: cleanName,
+                    code: code,
+                    term: termId,
+                    credit: credit,
+                    grade: grade,
+                    category: category
+                };
+
+                return askNextPendingQuestion();
+            }
+            
+            // --- 7. STATS INQUIRY ---
+            if (normalized.includes('gpa') || normalized.includes('เกรดเฉลี่ย') || normalized.includes('สะสม') || normalized.includes('เกียรตินิยม') || normalized.includes('สถานภาพ') || normalized.includes('เช็ค')) {
+                const gpax = document.getElementById('stat-gpax').innerText;
+                const honors = document.getElementById('stat-honors').innerText;
+                const status = document.getElementById('stat-status').innerText;
+                return `ตรวจสอบข้อมูลการศึกษาของคุณเรียบร้อยค่ะ:<br><br>📈 เกรดเฉลี่ยสะสม (GPAX): <strong>${gpax}</strong><br>🏅 ${honors}<br>🩺 ${status}`;
+            }
+            
+            // Default Response
+            return `ขออภัยค่ะ ฉันยังสับสนข้อความนี้อยู่นิดหน่อย ลองพิมพ์ส่งข้อมูลใหม่ตามตัวอย่างด้านบนเพื่อเพิ่มรายวิชา หรือพิมพ์คำสั่งแก้ไขได้เลยค่ะ`;
+        }
+
+        // --- WEB SPEECH API (VOICE ASSISTANT ENGINE) ---
+        function initGlobalVoiceEngine() {
+            if (isSpeechEngineActive) return; // Prevent double trigger
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                console.warn("Speech Recognition not supported in this browser.");
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = currentLang;
+
+            recognition.onstart = () => {
+                isSpeechEngineActive = true;
+                isMicRecording = true;
+                setMicUIActive(true);
+                console.log("Qgrade Voice Assistant online in:", currentLang);
+            };
+
+            recognition.onresult = (event) => {
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript.trim();
+                const isFinal = event.results[resultIndex].isFinal;
+                const normalized = transcript.toLowerCase();
+                
+                console.log("Speech Input captured:", transcript, "isFinal:", isFinal);
+
+                // --- ROUTE 1: If Dictation Mode (Voice-to-Text Typing) is Active ---
+                if (isDictating) {
+                    const inputField = document.getElementById('qgrade-input');
+                    inputField.value = transcript;
+                    
+                    if (isFinal) {
+                        cleanupDictation();
+                    }
+                    return;
+                }
+
+                // --- ROUTE 2: Background voice command open triggers ---
+                const chat = document.getElementById('qgrade-chat');
+                const isChatHidden = chat.classList.contains('hidden');
+                
+                if (isChatHidden) {
+                    const matchesKeyword = normalized.includes("qg") || 
+                                           normalized.includes("ครูจี") || 
+                                           normalized.includes("คิวจี") || 
+                                           normalized.includes("คิว จี") || 
+                                           normalized.includes("ครู จี");
+                    if (matchesKeyword) {
+                        toggleQgrade();
+                        appendQgradeMessage('bot', `สวัสดีค่ะ! ได้ยินคุณเรียกหาฉัน ยินดีต้อนรับสู่ GradeInsight ฉันพร้อมรับคำสั่งเสียงแล้วค่ะ 🎤`, true);
+                        speakTextFeedback("สวัสดีค่ะ มีอะไรให้ครูจีช่วยไหมคะ");
+                    }
+                    return;
+                }
+
+                // --- ROUTE 3: General Chat is Open, and NOT dictating (Command Analysis) ---
+                if (isFinal) {
+                    appendQgradeMessage('user', transcript, false);
+                    setTimeout(() => {
+                        const response = parseQgradeCommand(transcript);
+                        appendQgradeMessage('bot', response, true);
+                    }, 600);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.warn("Speech engine warning/error:", event.error);
+                if (event.error === 'not-allowed') {
+                    isSpeechEngineActive = false;
+                    isMicRecording = false;
+                    setMicUIActive(false);
+                    cleanupDictation();
+                }
+            };
+
+            recognition.onend = () => {
+                isMicRecording = false;
+                // Graceful auto restart loop so triggers and mic buttons always respond
+                if (isSpeechEngineActive) {
+                    try {
+                        recognition.lang = currentLang;
+                        recognition.start();
+                    } catch(e) {
+                        console.error("Speech re-init failure:", e);
+                    }
+                } else {
+                    setMicUIActive(false);
+                }
+            };
+
+            try {
+                recognition.start();
+            } catch(e) {
+                console.error("Mic initialization block:", e);
+            }
+        }
+
+        // --- SPEECH DICTATION MODE (WRITE DIRECTLY TO INPUT) ---
+        function toggleVoiceTyping() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                appendQgradeMessage('bot', "ขออภัยค่ะ เบราว์เซอร์นี้ไม่รองรับระบบตรวจจับเสียงจากไมโครโฟน แนะนำให้เปิดผ่าน Google Chrome นะคะ 🎤", true);
+                return;
+            }
+
+            const inputField = document.getElementById('qgrade-input');
+            const micBtn = document.getElementById('input-mic-btn');
+
+            if (isDictating) {
+                cleanupDictation();
+                return;
+            }
+
+            // Visual feedback loop
+            isDictating = true;
+            micBtn.classList.remove('text-[var(--color-mute-text)]');
+            micBtn.classList.add('text-red-500', 'animate-bounce');
+            inputField.placeholder = "🎙️ กำลังเปิดไมโครโฟน... พูดได้ทันทีค่ะ";
+            inputField.value = "";
+
+            if (!isSpeechEngineActive) {
+                isSpeechEngineActive = true;
+                initGlobalVoiceEngine();
+            } else {
+                recognition.stop();
+            }
+        }
+
+        function cleanupDictation() {
+            isDictating = false;
+            const inputField = document.getElementById('qgrade-input');
+            const micBtn = document.getElementById('input-mic-btn');
+            if (inputField) inputField.placeholder = "พิมพ์คุยหรือกดไมค์เพื่อพูด...";
+            if (micBtn) {
+                micBtn.classList.remove('text-red-500', 'animate-pulse', 'animate-bounce');
+                micBtn.classList.add('text-[var(--color-mute-text)]');
+            }
+        }
+
+        function setMicUIActive(active) {
+            const pulse = document.getElementById('mic-pulse');
+            const micBtnIcon = document.getElementById('input-mic-btn');
+            
+            if (active) {
+                if (pulse) pulse.classList.remove('hidden');
+                if (micBtnIcon) micBtnIcon.classList.add('text-red-500');
+            } else {
+                if (pulse) pulse.classList.add('hidden');
+                if (micBtnIcon) micBtnIcon.classList.remove('text-red-500');
+            }
+        }
+
+        function speakTextFeedback(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = currentLang;
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        window.onload = initApp;
+
+        // Progressive Web App Setup
+        if ('serviceWorker' in navigator) {
+            const swContent = `
+                self.addEventListener('install', (e) => { e.waitUntil(self.skipWaiting()); });
+                self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
+                self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request)); });
+            `;
+            const blob = new Blob([swContent], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW Setup Failed:', err));
+        }
+    </script>
 </body>
 </html>
